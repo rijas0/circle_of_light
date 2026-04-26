@@ -16,6 +16,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Noto Sans Arabic',
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.cream,
       textTheme: const TextTheme(

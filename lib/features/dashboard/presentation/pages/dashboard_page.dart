@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:circle_of_light/core/constants/app_strings.dart';
-import 'package:circle_of_light/core/theme/app_colors.dart';
-import 'package:circle_of_light/features/dashboard/presentation/widgets/check_in_card.dart';
-import 'package:circle_of_light/features/dashboard/presentation/widgets/metric_tile.dart';
-import 'package:circle_of_light/shared/widgets/app_card.dart';
-import 'package:circle_of_light/shared/widgets/progress_badge.dart';
-import 'package:circle_of_light/shared/widgets/section_title.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../widgets/check_in_card.dart';
+import '../widgets/metric_tile.dart';
+import '../../../../shared/widgets/app_card.dart';
+import '../../../../shared/widgets/progress_badge.dart';
+import '../../../../shared/widgets/section_title.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -18,21 +17,57 @@ class DashboardPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppStrings.appName,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(color: AppColors.emerald),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppStrings.welcomeTitle,
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            AppStrings.welcomeSubtitle,
-            style: Theme.of(context).textTheme.bodyLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "السلام عليكم",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    "Althaf Ahamed",
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppColors.emerald,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    "Let's grow together in the light of Quran.",
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(fontSize: 8.0),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(CircleBorder()),
+                      backgroundColor: WidgetStatePropertyAll(
+                        AppColors.emerald,
+                      ),
+                      iconColor: WidgetStatePropertyAll(AppColors.cream),
+                      iconSize: WidgetStatePropertyAll(20.0),
+                    ),
+                    child: Icon(Icons.notifications_none_rounded),
+                  ),
+
+                  CircleAvatar(radius: 24.0, child: Text('AA')),
+                ],
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           Container(
