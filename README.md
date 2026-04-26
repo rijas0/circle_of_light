@@ -1,12 +1,9 @@
 # Circle of Light
 
-A Flutter starter scaffold for **Circle of Light**, a social accountability platform for Quran engagement.
+Circle of Light is a private, community-driven mobile application designed to help individuals build a consistent relationship with the Quran through shared accountability and reflection.
+Instead of approaching Quran engagement as a solitary activity, the platform transforms it into a collective daily habit, where small groups support, motivate, and grow together.
 
-## Project Goal
-
-This repository starts with a clean, scalable Flutter structure designed for a hackathon build that can later grow into a production-ready app.
-
-## Recommended Flutter Structure
+## Project Structure
 
 ```text
 lib/
@@ -35,9 +32,3 @@ lib/
 flutter pub get
 flutter run
 ```
-
-## Next Suggested Steps
-
-1. Add state management for check-ins and reflections.
-2. Connect authentication and realtime backend services.
-3. Replace sample data with repositories backed by Supabase or Firebase.
