@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../features/auth/presentation/pages/login_screen.dart';
-import '../core/constants/app_strings.dart';
-import '../features/circles/presentation/pages/circles_page.dart';
-// import '../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../features/profile/presentation/pages/profile_page.dart';
-import '../features/reflections/presentation/pages/reflections_page.dart';
+import 'package:circle_of_light/core/constants/app_strings.dart';
+import 'package:circle_of_light/features/circles/presentation/pages/circles_page.dart';
+import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:circle_of_light/features/profile/presentation/pages/profile_page.dart';
+import 'package:circle_of_light/features/reflections/presentation/pages/reflections_page.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -18,7 +17,7 @@ class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
   static const _pages = [
-    LoginScreen(),
+    DashboardPage(),
     CirclesPage(),
     ReflectionsPage(),
     ProfilePage(),
