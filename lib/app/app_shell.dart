@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../features/auth/presentation/pages/login_screen.dart';
 import 'package:circle_of_light/core/constants/app_strings.dart';
 import 'package:circle_of_light/features/circles/presentation/pages/circles_page.dart';
-import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
+// import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:circle_of_light/features/profile/presentation/pages/profile_page.dart';
 import 'package:circle_of_light/features/reflections/presentation/pages/reflections_page.dart';
 
@@ -17,7 +18,7 @@ class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
   static const _pages = [
-    DashboardPage(),
+    LoginScreen(),
     CirclesPage(),
     ReflectionsPage(),
     ProfilePage(),
