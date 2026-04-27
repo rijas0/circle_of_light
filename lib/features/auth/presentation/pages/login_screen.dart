@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:circle_of_light/core/theme/app_colors.dart';
+import 'package:circle_of_light/core/constants/app_strings.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -120,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Text(
                       AppStrings.forgotPassword,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.emerald,
                         fontWeight: FontWeight.w600,
                       ),
@@ -138,12 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     AppStrings.login,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -212,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         // TODO: Navigate to sign up
                       },
-                      child: Text(
+                      child: const Text(
                         AppStrings.signUp,
                         style: TextStyle(
                           color: AppColors.emerald,
