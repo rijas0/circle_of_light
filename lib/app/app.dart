@@ -1,6 +1,6 @@
+import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'package:circle_of_light/app/app_shell.dart';
 import 'package:circle_of_light/core/constants/app_strings.dart';
 import 'package:circle_of_light/core/theme/app_theme.dart';
 
@@ -9,11 +9,15 @@ class CircleOfLightApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppStrings.appName,
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const AppShell(),
+    
+    return  MaterialApp(
+        title: AppStrings.appName,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        
+        home: const LoginScreen(),
+        
+
     );
   }
 }

@@ -1,9 +1,7 @@
+import 'package:circle_of_light/features/circles/presentation/pages/circle_dashboard_page.dart';
+import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
-
-import '../features/auth/presentation/pages/login_screen.dart';
 import 'package:circle_of_light/core/constants/app_strings.dart';
-import 'package:circle_of_light/features/circles/presentation/pages/circles_page.dart';
-// import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:circle_of_light/features/profile/presentation/pages/profile_page.dart';
 import 'package:circle_of_light/features/reflections/presentation/pages/reflections_page.dart';
 
@@ -18,8 +16,8 @@ class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
   static const _pages = [
-    LoginScreen(),
-    CirclesPage(),
+    DashboardPage(),
+    CircleDashboard(),
     ReflectionsPage(),
     ProfilePage(),
   ];
@@ -31,6 +29,8 @@ class _AppShellState extends State<AppShell> {
         child: IndexedStack(index: _currentIndex, children: _pages),
       ),
       bottomNavigationBar: NavigationBar(
+        backgroundColor: const Color(0xFF07120A),
+        labelTextStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white)),
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
           setState(() {

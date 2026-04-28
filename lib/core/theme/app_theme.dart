@@ -18,7 +18,8 @@ class AppTheme {
       useMaterial3: true,
       fontFamily: 'Noto Sans Arabic',
       colorScheme: scheme,
-      scaffoldBackgroundColor: AppColors.cream,
+      // scaffoldBackgroundColor: AppColors.cream,
+      scaffoldBackgroundColor:const Color(0xFF07120A),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           fontSize: 32,
