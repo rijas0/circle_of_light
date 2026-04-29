@@ -28,7 +28,6 @@ class _AppShellState extends State<AppShell> {
     ReflectionsScreen(),
     ProfileScreen(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
