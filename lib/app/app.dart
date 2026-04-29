@@ -14,10 +14,7 @@ class CircleOfLightApp extends StatelessWidget {
         title: AppStrings.appName,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        
         home: const LoginScreen(),
-        
-
     );
   }
 }

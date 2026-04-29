@@ -18,10 +18,9 @@ class _AppShellState extends State<AppShell> {
   static const _pages = [
     DashboardPage(),
     CircleDashboard(),
-    ReflectionsPage(),
-    ProfilePage(),
+    ReflectionsScreen(),
+    ProfileScreen(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
