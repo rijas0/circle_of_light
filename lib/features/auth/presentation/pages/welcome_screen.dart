@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class WelcomeScreen extends StatelessWidget {
+import '../../data/services/quran_auth_service.dart';
+
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
-  static const _quranFoundationAuthUrl = 'https://quran.foundation/auth/login';
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
 
-  Future<void> _onConnectTap(BuildContext context) async {
-    final url = Uri.parse(_quranFoundationAuthUrl);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unable to open Quran Foundation login page')),
-        );
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final _authService = QuranAuthService();
+  bool _isLoading = false;
+
+  Future<void> _onConnectTap() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final code = await _authService.login();
+
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+
+      if (code != null) {
+        // TODO: Send 'code' to your Supabase Edge Function / Backend
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Success! Code: $code')));
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Login cancelled')));
       }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -38,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            _ConnectButton(onTap: () => _onConnectTap(context)),
+            _ConnectButton(isLoading: _isLoading, onTap: _onConnectTap),
             const SizedBox(height: 32),
           ],
         ),
@@ -74,19 +96,16 @@ class _AppSubtitle extends StatelessWidget {
       child: Text(
         'Build a steady rhythm of Quran reading\nand reflection through gentle, shared accountability.',
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Color(0xFF9CA3AF),
-          fontSize: 15,
-          height: 1.6,
-        ),
+        style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 15, height: 1.6),
       ),
     );
   }
 }
 
 class _ConnectButton extends StatelessWidget {
-  const _ConnectButton({required this.onTap});
+  const _ConnectButton({required this.isLoading, required this.onTap});
 
+  final bool isLoading;
   final VoidCallback onTap;
 
   @override
@@ -96,7 +115,7 @@ class _ConnectButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: onTap,
+          onPressed: isLoading ? null : onTap,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF3D7A52),
             foregroundColor: Colors.white,
@@ -106,13 +125,19 @@ class _ConnectButton extends StatelessWidget {
             ),
             elevation: 0,
           ),
-          child: const Text(
-            'Connect with Quran Foundation',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          child: isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Text(
+                  'Connect with Quran Foundation',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
         ),
       ),
     );
@@ -127,9 +152,7 @@ class LanternIllustration extends StatelessWidget {
     return SizedBox(
       width: 220,
       height: 280,
-      child: CustomPaint(
-        painter: _LanternPainter(),
-      ),
+      child: CustomPaint(painter: _LanternPainter()),
     );
   }
 }
@@ -158,9 +181,10 @@ class _LanternPainter extends CustomPainter {
     canvas.drawCircle(
       center,
       radius,
-      Paint()..shader = gradient.createShader(
-        Rect.fromCircle(center: center, radius: radius),
-      ),
+      Paint()
+        ..shader = gradient.createShader(
+          Rect.fromCircle(center: center, radius: radius),
+        ),
     );
 
     final innerGlow = RadialGradient(
@@ -175,15 +199,15 @@ class _LanternPainter extends CustomPainter {
     canvas.drawCircle(
       center,
       radius * 0.5,
-      Paint()..shader = innerGlow.createShader(
-        Rect.fromCircle(center: center, radius: radius * 0.5),
-      ),
+      Paint()
+        ..shader = innerGlow.createShader(
+          Rect.fromCircle(center: center, radius: radius * 0.5),
+        ),
     );
   }
 
   void _drawLantern(Canvas canvas, Size size) {
     final centerX = size.width / 2;
-    final paint = Paint()..style = PaintingStyle.fill;
     final linePaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
@@ -194,7 +218,6 @@ class _LanternPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
-    final greenPaint = Paint()..color = const Color(0xFF4ADE80);
     final greenLinePaint = Paint()
       ..color = const Color(0xFF4ADE80)
       ..style = PaintingStyle.stroke
@@ -283,7 +306,6 @@ class _LanternPainter extends CustomPainter {
     canvas.drawPath(glassPath, glassPaint);
 
     // Vertical decorative lines on body
-    final bodyMidY = (bodyTopY + bodyBottomY) / 2;
     greenLinePaint.strokeWidth = 1;
 
     canvas.drawLine(
@@ -352,18 +374,13 @@ class _LanternPainter extends CustomPainter {
         ),
       );
 
-    canvas.drawCircle(
-      Offset(centerX, flameCenterY),
-      flameRadius,
-      flamePaint,
-    );
+    canvas.drawCircle(Offset(centerX, flameCenterY), flameRadius, flamePaint);
 
     // Inner glow ring
     canvas.drawCircle(
       Offset(centerX, flameCenterY),
       flameRadius * 0.5,
-      Paint()
-        ..color = const Color(0xFFFFF3E0).withOpacity(0.4),
+      Paint()..color = const Color(0xFFFFF3E0).withOpacity(0.4),
     );
 
     // Small decorative dots on corners
@@ -385,6 +402,7 @@ class _LanternPainter extends CustomPainter {
     final sparklePaint = Paint()
       ..color = const Color(0xFF4ADE80).withOpacity(0.6);
 
+    final bodyMidY = (bodyTopY + bodyBottomY) / 2;
     final sparkles = [
       Offset(centerX + bodyWidth * 0.5, bodyTopY - 10),
       Offset(centerX - bodyWidth * 0.5, bodyBottomY + 10),
@@ -405,8 +423,42 @@ class _LanternPainter extends CustomPainter {
     for (var i = 0; i < points * 2; i++) {
       final radius = i.isEven ? outerRadius : innerRadius;
       final angle = (i * 3.14159 / points) - 3.14159 / 2;
-      final x = center.dx + radius * (i == 0 ? 0 : i == 1 ? 0.707 : i == 2 ? 1 : i == 3 ? 0.707 : i == 4 ? 0 : i == 5 ? -0.707 : i == 6 ? -1 : -0.707);
-      final y = center.dy + radius * (i == 0 ? -1 : i == 1 ? -0.707 : i == 2 ? 0 : i == 3 ? 0.707 : i == 4 ? 1 : i == 5 ? 0.707 : i == 6 ? 0 : -0.707);
+      final x =
+          center.dx +
+          radius *
+              (i == 0
+                  ? 0
+                  : i == 1
+                  ? 0.707
+                  : i == 2
+                  ? 1
+                  : i == 3
+                  ? 0.707
+                  : i == 4
+                  ? 0
+                  : i == 5
+                  ? -0.707
+                  : i == 6
+                  ? -1
+                  : -0.707);
+      final y =
+          center.dy +
+          radius *
+              (i == 0
+                  ? -1
+                  : i == 1
+                  ? -0.707
+                  : i == 2
+                  ? 0
+                  : i == 3
+                  ? 0.707
+                  : i == 4
+                  ? 1
+                  : i == 5
+                  ? 0.707
+                  : i == 6
+                  ? 0
+                  : -0.707);
 
       if (i == 0) {
         path.moveTo(center.dx, center.dy - outerRadius);
