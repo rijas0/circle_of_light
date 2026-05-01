@@ -1,3 +1,6 @@
+import 'package:circle_of_light/features/circles/presentation/pages/circle_dashboard_page.dart';
+import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:circle_of_light/features/get_started/presentation/get_started_page.dart';
 import 'package:flutter/material.dart';
 
 import '../features/circles/presentation/pages/circle_dashboard_page.dart';
@@ -16,6 +19,7 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
+  bool hasJoined = false;
 
   static const _pages = [
     DashboardPage(),
@@ -29,9 +33,9 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: IndexedStack(index: _currentIndex, children: _pages),
+        child: hasJoined ? IndexedStack(index: _currentIndex, children: _pages) : GetStartedScreen(),
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: hasJoined ? NavigationBar(
         backgroundColor: const Color(0xFF07120A),
         labelTextStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white)),
         selectedIndex: _currentIndex,
@@ -67,7 +71,7 @@ class _AppShellState extends State<AppShell> {
             label: AppStrings.profileTab,
           ),
         ],
-      ),
+      ):null,
     );
   }
 }
