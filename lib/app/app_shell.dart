@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../features/circles/presentation/pages/circle_dashboard_page.dart';
 import '../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../features/quran/presentation/pages/all_surahs_screen.dart';
-import '../features/tasks/presentation/pages/tasks_page.dart';
 import '../core/constants/app_strings.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
 import '../features/reflections/presentation/pages/reflections_page.dart';
@@ -20,7 +20,7 @@ class _AppShellState extends State<AppShell> {
   static const _pages = [
     DashboardPage(),
     AllSurahsScreen(),
-    TasksPage(),
+    CircleDashboard(),
     ReflectionsScreen(),
     ProfileScreen(),
   ];
@@ -52,9 +52,9 @@ class _AppShellState extends State<AppShell> {
             label: AppStrings.quranTab,
           ),
           NavigationDestination(
-            icon: Icon(Icons.checklist_outlined),
-            selectedIcon: Icon(Icons.checklist_rounded),
-            label: AppStrings.tasksTab,
+            icon: Icon(Icons.groups_outlined),
+            selectedIcon: Icon(Icons.groups_rounded),
+            label: AppStrings.circlesTab,
           ),
           NavigationDestination(
             icon: Icon(Icons.edit_note_outlined),

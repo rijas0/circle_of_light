@@ -5,7 +5,7 @@ class AppStrings {
 
   static const homeTab = 'Home';
   static const quranTab = 'Quran';
-  static const tasksTab = 'Tasks';
+  static const circlesTab = 'Circles';
   static const reflectionsTab = 'Reflections';
   static const profileTab = 'Profile';
 
