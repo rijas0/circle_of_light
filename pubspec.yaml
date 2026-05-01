@@ -17,6 +17,9 @@ dependencies:
   dio: ^5.9.2
   intl: ^0.20.2
   supabase: ^2.10.6
+  url_launcher: ^6.3.1
+  flutter_appauth: ^8.0.0
+  flutter_secure_storage: ^9.2.2
   build_runner: ^2.14.1
   cupertino_icons: ^1.0.8
 
