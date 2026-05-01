@@ -4,6 +4,7 @@ class AppStrings {
       'A social accountability platform for Quran engagement';
 
   static const homeTab = 'Home';
+  static const quranTab = 'Quran';
   static const circlesTab = 'Circles';
   static const reflectionsTab = 'Reflections';
   static const profileTab = 'Profile';
