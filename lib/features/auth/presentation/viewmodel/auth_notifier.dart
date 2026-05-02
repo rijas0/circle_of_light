@@ -35,5 +35,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
     }
   }
+
+  void setHasJoinedRoom() {
+    state = state.copyWith(hasJoinedRoom: true);
+  }
   
 }

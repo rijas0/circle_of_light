@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 
 class GetStartedScreen extends StatelessWidget {
@@ -105,7 +106,7 @@ class GetStartedScreen extends StatelessWidget {
                 arrowColor: const Color(0xFF2ECC71),
                 borderColor: const Color(0xFF2ECC71).withOpacity(0.25),
                 backgroundColor: const Color(0xFF0D2018),
-                onTap: () {},
+                onTap: () => context.push('/create-join-room'),
               ),
 
               const SizedBox(height: 14),

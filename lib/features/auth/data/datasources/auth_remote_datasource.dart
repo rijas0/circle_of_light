@@ -40,18 +40,19 @@ class AuthRemoteDataSource {
 
       final code = result.authorizationCode!;
 
-      // final response = await dio.post(
-      //   'https://YOUR_PROJECT.functions.supabase.co/exchange-code',
-      //   data: {"code": code},
-      // );
+      final response = await dio.post(
+        'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/fetchToken',
+        data: {"code": code},
+      );
+      log('response ${response.data}');
+      return UserModel.fromJson(response.data);
 
-      // return UserModel.fromJson(response.data);
-      const dummyData = {
-        "id":"12",
-        "name":"Rijas",
-        "email":"rijas@0"
-      };
-      return UserModel.fromJson(dummyData);
+      // const dummyData = {
+      //   "id":"12",
+      //   "name":"Rijas",
+      //   "email":"rijas@0"
+      // };
+      
     } catch (e) {
       throw Exception("Login failed: $e");
     }

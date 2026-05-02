@@ -8,6 +8,7 @@ class AppStrings {
   static const tasksTab = 'Tasks';
   static const reflectionsTab = 'Reflections';
   static const profileTab = 'Profile';
+  static const circleTab = 'Circle';
 
   static const welcomeTitle = 'Grow in Quran with your circle';
   static const welcomeSubtitle =
