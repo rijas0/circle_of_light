@@ -33,4 +33,16 @@ class UserModel extends UserEntity {
       "role": role,
     };
   }
+
+  UserEntity toEntity() {
+    return UserEntity(
+      id: id,
+      email: email,
+      name: name,
+      accessToken: accessToken,
+      avatarUrl: avatarUrl,
+      role: role,
+      createdAt: createdAt,
+    );
+  }
 }

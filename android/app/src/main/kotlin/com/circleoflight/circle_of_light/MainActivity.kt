@@ -1,4 +1,4 @@
-package com.circleoflight.circle_of_light
+package com.dayira.app
 
 import io.flutter.embedding.android.FlutterActivity
 
