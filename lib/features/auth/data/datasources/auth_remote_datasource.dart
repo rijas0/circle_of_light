@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:circle_of_light/core/api/app_api.dart';
-import 'package:circle_of_light/features/auth/data/model/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+
+import '../model/user_model.dart';
 
 class AuthRemoteDataSource {
   final Dio dio;
@@ -44,15 +44,12 @@ class AuthRemoteDataSource {
         'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/fetchToken',
         data: {"code": code},
       );
-      log('response ${response.data}');
-      return UserModel.fromJson(response.data);
 
-      // const dummyData = {
-      //   "id":"12",
-      //   "name":"Rijas",
-      //   "email":"rijas@0"
-      // };
-      
+      log('response: ${response.data}');
+
+      return UserModel.fromJson(response.data);
+      // const dummyData = {"id": "12", "name": "Rijas", "email": "rijas@0"};
+      // return UserModel.fromJson(dummyData);
     } catch (e) {
       throw Exception("Login failed: $e");
     }
