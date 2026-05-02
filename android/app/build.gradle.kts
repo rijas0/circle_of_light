@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.circleoflight.circle_of_light"
+    namespace = "com.dayira.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,13 +21,16 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.circleoflight.circle_of_light"
+        applicationId = "com.dayira.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        resValue("string", "app_name", "dayira")
+
+        manifestPlaceholders += mapOf("appAuthRedirectScheme" to "dayira")
     }
 
     buildTypes {
