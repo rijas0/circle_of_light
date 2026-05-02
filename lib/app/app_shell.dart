@@ -1,47 +1,29 @@
-import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
-import 'package:circle_of_light/features/get_started/presentation/get_started_page.dart';
+import 'package:circle_of_light/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
-
-import '../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../features/quran/presentation/pages/all_surahs_screen.dart';
-import '../features/tasks/presentation/pages/tasks_page.dart';
-import '../core/constants/app_strings.dart';
-import '../features/profile/presentation/pages/profile_page.dart';
-import '../features/reflections/presentation/pages/reflections_page.dart';
+import 'package:go_router/go_router.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key, required Widget child});
+  final Widget child;
+  const AppShell({super.key, required this.child});
 
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  int _currentIndex = 0;
-  bool hasJoined = false;
-
-  static const _pages = [
-    DashboardPage(),
-    AllSurahsScreen(),
-    TasksPage(),
-    ReflectionsScreen(),
-    ProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).uri.toString();
+    int currentIndex = _computeIndex(location);
     return Scaffold(
-      body: SafeArea(
-        child: IndexedStack(index: _currentIndex, children: _pages)
-      ),
-      bottomNavigationBar: hasJoined ? NavigationBar(
+      body: widget.child,
+      bottomNavigationBar: NavigationBar(
         backgroundColor: const Color(0xFF07120A),
         labelTextStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-        selectedIndex: _currentIndex,
+        selectedIndex: currentIndex,
         onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          final routes = ['/dash', '/quran', '/tasks', '/reflections', '/profile'];
+          context.go(routes[index]);
         },
         destinations: const [
           NavigationDestination(
@@ -70,7 +52,25 @@ class _AppShellState extends State<AppShell> {
             label: AppStrings.profileTab,
           ),
         ],
-      ):null,
+      ),
     );
+  }
+
+  int _computeIndex(String location) {
+    switch (location) {
+      case '/dash':
+      case '/':
+        return 0;
+      case '/quran':
+        return 1;
+      case '/tasks':
+        return 2;
+      case '/reflections':
+        return 3;
+      case '/profile':
+        return 4;
+      default:
+        return 0;
+    }
   }
 }

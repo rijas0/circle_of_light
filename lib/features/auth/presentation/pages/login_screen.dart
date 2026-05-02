@@ -1,4 +1,5 @@
 import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
+import 'package:circle_of_light/features/auth/presentation/viewmodel/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -57,6 +58,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error!), backgroundColor: Colors.red),
+        );
+      }
+      if (previous?.user == null && next.user != null && mounted) {
+        context.go('/');
+      }
+    });
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0F14),
       body: Stack(

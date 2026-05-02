@@ -2,6 +2,7 @@ import 'package:circle_of_light/app/app_shell.dart';
 import 'package:circle_of_light/core/utils/go_router_refresh_notifier.dart';
 import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
 import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
+import 'package:circle_of_light/features/circles/presentation/pages/circle_dashboard_page.dart';
 import 'package:circle_of_light/features/create_circle/presentation/create_join_circle.dart';
 import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:circle_of_light/features/get_started/presentation/get_started_page.dart';
@@ -18,7 +19,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final notifier = ref.watch(authNotifierProvider.notifier);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/',
     refreshListenable: GoRouterRefreshNotifier(notifier.stream),
 
     redirect: (context, state) {
@@ -27,19 +28,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final hasRoom = authState.hasJoinedRoom;
 
       final isLoginPage = state.matchedLocation == '/login';
+      final isGetStartedPage = state.matchedLocation == '/';
+      final isCreateJoinPage = state.matchedLocation == '/create-join-room';
 
-      /// Not logged in → go login
       if (!isLoggedIn) {
         return isLoginPage ? null : '/login';
       }
 
-      if (isLoggedIn && isLoginPage) {
-        // If they are logged in but on login page, send them where they belong
-        return hasRoom ? '/dash' : '/';
+      if (isLoggedIn && !hasRoom) {
+        return (isGetStartedPage || isCreateJoinPage) ? null : '/';
       }
 
-      if (isLoggedIn && state.matchedLocation == '/') {
-        return hasRoom ? '/dash' : '/';
+      if (isLoggedIn && hasRoom && (isLoginPage || isGetStartedPage || isCreateJoinPage)) {
+        return '/dash';
       }
 
       return null;
@@ -50,16 +51,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
-
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const GetStartedScreen(),
+      ),
+      GoRoute(
+        path: '/create-join-room',
+        builder: (context, state) => const CreateJoinCircle(),
+      ),
       ShellRoute(
-        builder: (context, state, child) {
-          return AppShell(child: child);
-        },
+        builder: (context, state, child) => AppShell(child: child),
         routes: [
-          GoRoute(
-            path: '/',
-            builder: (context, state) => const GetStartedScreen(),
-          ),
           GoRoute(
             path: '/dash',
             builder: (context, state) => const DashboardPage(),
@@ -73,16 +75,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const TasksPage(),
           ),
           GoRoute(
+            path: '/circle',
+            builder: (context, state) => const CircleDashboard(),
+          ),
+          GoRoute(
             path: '/reflections',
             builder: (context, state) => const ReflectionsScreen(),
           ),
           GoRoute(
             path: '/profile',
             builder: (context, state) => const ProfileScreen(),
-          ),
-          GoRoute(
-            path: '/create-join-room',
-            builder: (context, state) => const CreateJoinCircle(),
           ),
         ],
       ),
