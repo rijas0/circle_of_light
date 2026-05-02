@@ -10,5 +10,11 @@ class AuthRepoImpl implements AuthRepository{
   Future<UserEntity> exchangeCode(String code) {
    return remote.exchangeCode(code);
   }
+  
+  @override
+  Future<UserEntity> loginWithQuran() async{
+     final model = await remote.loginWithQuran();
+    return model.toEntity();
+  }
 
 }
