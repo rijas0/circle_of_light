@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:circle_of_light/core/api/app_api.dart';
 import 'package:circle_of_light/features/auth/data/model/user_model.dart';
 import 'package:dio/dio.dart';
@@ -13,8 +15,7 @@ class AuthRemoteDataSource {
     const clientId = "b90f5393-b76b-41dd-bdd8-b7c738536464";
     const redirectUri = "dayira://quran-login";
 
-    const String issuer =
-        'https://prelive-oauth2.quran.foundation/oauth2/auth';
+    const String issuer = 'https://prelive-oauth2.quran.foundation/oauth2/auth';
     const String tokenEndpoint =
         'https://prelive-oauth2.quran.foundation/oauth2/token';
     try {
@@ -27,9 +28,11 @@ class AuthRemoteDataSource {
             tokenEndpoint: tokenEndpoint,
           ),
           scopes: ['openid'],
-          externalUserAgent: ExternalUserAgent.asWebAuthenticationSession
         ),
       );
+
+      log("RESULT: $result");
+      log("CODE: ${result.authorizationCode}");
 
       if (result == null || result.authorizationCode == null) {
         throw Exception("User cancelled login");
@@ -37,12 +40,18 @@ class AuthRemoteDataSource {
 
       final code = result.authorizationCode!;
 
-      final response = await dio.post(
-        'https://YOUR_PROJECT.functions.supabase.co/exchange-code',
-        data: {"code": code},
-      );
+      // final response = await dio.post(
+      //   'https://YOUR_PROJECT.functions.supabase.co/exchange-code',
+      //   data: {"code": code},
+      // );
 
-      return UserModel.fromJson(response.data);
+      // return UserModel.fromJson(response.data);
+      const dummyData = {
+        "id":"12",
+        "name":"Rijas",
+        "email":"rijas@0"
+      };
+      return UserModel.fromJson(dummyData);
     } catch (e) {
       throw Exception("Login failed: $e");
     }

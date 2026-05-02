@@ -1,3 +1,5 @@
+import 'package:circle_of_light/features/auth/data/repositories/room_repo_impl.dart';
+import 'package:circle_of_light/features/auth/domain/usecases/check_user_room_usecase.dart';
 import 'package:circle_of_light/features/auth/domain/usecases/exchange_code_usecase.dart';
 import 'package:circle_of_light/features/auth/domain/usecases/login_with_quran_usercase.dart';
 import 'package:circle_of_light/features/auth/presentation/viewmodel/auth_notifier.dart';
@@ -29,7 +31,9 @@ final loginUseCaseProvider = Provider(
     ref.read(authRepositoryProvider),
   ),
 );
+final roomRepositoryProvider = Provider((ref)=>RoomRepositoryImpl(ref.read(dioProvider)));
+final checkUserRoomUseCase = Provider((ref)=>CheckUserRoomUseCase(ref.read(roomRepositoryProvider)));
 final authNotifierProvider =
     StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier(ref.read(exchangeCodeUseCaseProvider),ref.read(loginUseCaseProvider));
+  return AuthNotifier(ref.read(exchangeCodeUseCaseProvider),ref.read(loginUseCaseProvider),ref.read(checkUserRoomUseCase));
 });

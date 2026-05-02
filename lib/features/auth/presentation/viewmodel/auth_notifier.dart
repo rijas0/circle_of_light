@@ -1,3 +1,4 @@
+import 'package:circle_of_light/features/auth/domain/usecases/check_user_room_usecase.dart';
 import 'package:circle_of_light/features/auth/domain/usecases/login_with_quran_usercase.dart';
 
 import '../../domain/usecases/exchange_code_usecase.dart';
@@ -7,8 +8,9 @@ import 'package:flutter_riverpod/legacy.dart';
 class AuthNotifier extends StateNotifier<AuthState> {
   final ExchangeCodeUseCase exchangeCode;
   final LoginWithQuranUseCase login;
+  final CheckUserRoomUseCase checkRoom;
 
-  AuthNotifier(this.exchangeCode,this.login) : super(AuthState());
+  AuthNotifier(this.exchangeCode,this.login,this.checkRoom) : super(AuthState());
 
   Future<void> handleAuthCode(String code) async {
     state = AuthState(isLoading: true);
@@ -24,7 +26,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     try {
       final user = await login();
-      state = state.copyWith(isLoading: false, user: user);
+      final hasJoinedRoom = await checkRoom(user.id);
+      state = state.copyWith(isLoading: false, user: user,hasJoinedRoom: hasJoinedRoom);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -32,6 +35,5 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
     }
   }
-
-
+  
 }

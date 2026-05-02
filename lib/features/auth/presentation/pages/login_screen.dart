@@ -410,14 +410,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         child: ElevatedButton(
           onPressed: () async {
             await ref.read(authNotifierProvider.notifier).loginWithQuran();
-            final state = ref.read(authNotifierProvider);
-            if (state.user != null) {
-              context.push('/');
-            } else if (state.error != null) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.error!)));
-            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
