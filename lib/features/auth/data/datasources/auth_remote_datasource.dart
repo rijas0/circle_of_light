@@ -42,7 +42,7 @@ class AuthRemoteDataSource {
 
       final response = await dio.post(
         'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/fetchToken',
-        data: {"code": code},
+        data: {"code": code,"code_verifier": result.codeVerifier},
       );
 
       log('response: ${response.data}');
