@@ -1,5 +1,4 @@
-// ignore: unused_import
-import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
+import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
 import 'package:circle_of_light/router/router.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +12,11 @@ class CircleOfLightApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(goRouterProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authNotifierProvider.notifier).restoreSession();
+    });
+
     return MaterialApp.router(
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,

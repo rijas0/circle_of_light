@@ -1,11 +1,13 @@
 import '../../domain/entities/user_entitie.dart';
 
 class UserModel extends UserEntity {
+  final String accessToken;
+
   UserModel({
     required super.id,
     required super.email,
     required super.name,
-    required super.accessToken,
+    required this.accessToken,
     required super.avatarUrl,
     required super.role,
     required super.createdAt,
@@ -39,7 +41,6 @@ class UserModel extends UserEntity {
       id: id,
       email: email,
       name: name,
-      accessToken: accessToken,
       avatarUrl: avatarUrl,
       role: role,
       createdAt: createdAt,

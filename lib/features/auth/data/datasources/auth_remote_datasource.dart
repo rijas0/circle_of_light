@@ -27,7 +27,7 @@ class AuthRemoteDataSource {
             authorizationEndpoint: issuer,
             tokenEndpoint: tokenEndpoint,
           ),
-          scopes: ['openid'],
+          scopes: ['openid','profile',],
         ),
       );
 

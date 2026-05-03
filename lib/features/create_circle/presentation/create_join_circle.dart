@@ -40,18 +40,6 @@ class CreateJoinCircle extends ConsumerWidget {
               const SizedBox(height: 16),
               _buildJoinCard(ref, context),
               const Spacer(),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    ref.read(authNotifierProvider.notifier).setHasJoinedRoom();
-                    context.go('/dash');
-                  },
-                  child: const Text(
-                    'Skip for now',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
