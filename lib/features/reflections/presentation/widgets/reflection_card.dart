@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:circle_of_light/core/theme/app_colors.dart';
-import 'package:circle_of_light/features/reflections/data/models/reflection_preview.dart';
-import 'package:circle_of_light/shared/widgets/app_card.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/reflection_preview.dart';
+import '../../../../shared/widgets/app_card.dart';
 
 class ReflectionCard extends StatelessWidget {
   const ReflectionCard({super.key, required this.reflection});

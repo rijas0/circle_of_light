@@ -1,10 +1,11 @@
-import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
-import 'package:circle_of_light/features/auth/presentation/viewmodel/auth_state.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../providers/provider.dart';
+import '../viewmodel/auth_state.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

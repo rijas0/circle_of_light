@@ -1,11 +1,10 @@
-// ignore: unused_import
-import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
-import 'package:circle_of_light/router/router.dart';
 import 'package:flutter/material.dart';
-
-import 'package:circle_of_light/core/constants/app_strings.dart';
-import 'package:circle_of_light/core/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/constants/app_strings.dart';
+import '../core/theme/app_theme.dart';
+import '../features/auth/presentation/pages/login_screen.dart';
+import '../router/router.dart';
 
 class CircleOfLightApp extends ConsumerWidget {
   const CircleOfLightApp({super.key});

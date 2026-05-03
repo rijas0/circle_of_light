@@ -1,9 +1,9 @@
-import 'package:circle_of_light/features/auth/domain/usecases/check_user_room_usecase.dart';
-import 'package:circle_of_light/features/auth/domain/usecases/login_with_quran_usercase.dart';
-
-import '../../domain/usecases/exchange_code_usecase.dart';
-import 'auth_state.dart';
 import 'package:flutter_riverpod/legacy.dart';
+
+import '../../domain/usecases/check_user_room_usecase.dart';
+import '../../domain/usecases/exchange_code_usecase.dart';
+import '../../domain/usecases/login_with_quran_usercase.dart';
+import 'auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final ExchangeCodeUseCase exchangeCode;

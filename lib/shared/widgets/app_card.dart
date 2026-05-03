@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:circle_of_light/core/theme/app_colors.dart';
+import '../../core/theme/app_colors.dart';
 
 class AppCard extends StatelessWidget {
   const AppCard({

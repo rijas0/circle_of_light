@@ -1,5 +1,6 @@
-import 'package:circle_of_light/features/auth/domain/repositories/room_repository.dart';
 import 'package:dio/dio.dart';
+
+import '../../domain/repositories/room_repository.dart';
 
 class RoomRepositoryImpl implements RoomRepository {
   final Dio dio;

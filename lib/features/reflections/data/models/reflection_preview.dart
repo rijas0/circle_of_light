@@ -1,4 +1,4 @@
-import 'package:circle_of_light/features/reflections/domain/entities/reflection_entry.dart';
+import '../../domain/entities/reflection_entry.dart';
 
 class ReflectionPreview extends ReflectionEntry {
   const ReflectionPreview({

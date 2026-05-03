@@ -1,17 +1,18 @@
-import 'package:circle_of_light/app/app_shell.dart';
-import 'package:circle_of_light/core/utils/go_router_refresh_notifier.dart';
-import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
-import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
-import 'package:circle_of_light/features/circles/presentation/pages/circle_dashboard_page.dart';
-import 'package:circle_of_light/features/create_circle/presentation/create_join_circle.dart';
-import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:circle_of_light/features/get_started/presentation/get_started_page.dart';
-import 'package:circle_of_light/features/profile/presentation/pages/profile_page.dart';
-import 'package:circle_of_light/features/quran/presentation/pages/all_surahs_screen.dart';
-import 'package:circle_of_light/features/reflections/presentation/pages/reflections_page.dart';
-import 'package:circle_of_light/features/tasks/presentation/pages/tasks_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../app/app_shell.dart';
+import '../core/utils/go_router_refresh_notifier.dart';
+import '../features/auth/presentation/pages/login_screen.dart';
+import '../features/auth/presentation/providers/provider.dart';
+import '../features/circles/presentation/pages/circle_dashboard_screen.dart';
+import '../features/circles/presentation/pages/circles_list_screen.dart';
+import '../features/create_circle/presentation/create_join_circle.dart';
+import '../features/dashboard/presentation/pages/dashboard_screen.dart';
+import '../features/get_started/presentation/get_started_screen.dart';
+import '../features/profile/presentation/pages/profile_screen.dart';
+import '../features/quran/presentation/pages/all_surahs_screen.dart';
+import '../features/reflections/presentation/pages/reflections_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   // final authState = ref.watch(authNotifierProvider);
@@ -64,19 +65,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/dash',
-            builder: (context, state) => const DashboardPage(),
+            builder: (context, state) => const DashboardScreen(),
           ),
           GoRoute(
             path: '/quran',
             builder: (context, state) => const AllSurahsScreen(),
           ),
           GoRoute(
-            path: '/tasks',
-            builder: (context, state) => const TasksPage(),
-          ),
-          GoRoute(
             path: '/circle',
-            builder: (context, state) => const CircleDashboard(),
+            builder: (context, state) => const CirclesScreen(),
           ),
           GoRoute(
             path: '/reflections',
