@@ -4,27 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'circle_details_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Light Seekers',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFF0A1A0F),
-        fontFamily: 'Georgia',
-      ),
-      home: const CircleDashboard(),
-    );
-  }
-}
-
 class CircleDashboard extends StatefulWidget {
   const CircleDashboard({super.key});
 
@@ -53,7 +32,6 @@ class _CircleDashboardState extends State<CircleDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF07120A),
       body: Stack(
         children: [
           // Background gradient

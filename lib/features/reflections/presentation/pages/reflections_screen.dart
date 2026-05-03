@@ -63,7 +63,6 @@ class _ReflectionsScreenState extends State<ReflectionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1B2A),
       body: SafeArea(
         child: Column(
           children: [
