@@ -3,28 +3,19 @@ import 'package:go_router/go_router.dart';
 
 import '../core/constants/app_strings.dart';
 
-class AppShell extends StatefulWidget {
-  final Widget child;
-  const AppShell({super.key, required this.child});
+class AppShell extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+  const AppShell({super.key, required this.navigationShell});
 
-  @override
-  State<AppShell> createState() => _AppShellState();
-}
-
-class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
-    int currentIndex = _computeIndex(location);
     return Scaffold(
-      body: widget.child,
+      body: navigationShell,
       bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color(0xFF07120A),
-        labelTextStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-        selectedIndex: currentIndex,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) {
-          final routes = ['/dash', '/quran', '/circle', '/reflections', '/profile'];
-          context.go(routes[index]);
+          navigationShell.goBranch(index);
         },
         destinations: const [
           NavigationDestination(
@@ -55,23 +46,5 @@ class _AppShellState extends State<AppShell> {
         ],
       ),
     );
-  }
-
-  int _computeIndex(String location) {
-    switch (location) {
-      case '/dash':
-      case '/':
-        return 0;
-      case '/quran':
-        return 1;
-      case '/circle':
-        return 2;
-      case '/reflections':
-        return 3;
-      case '/profile':
-        return 4;
-      default:
-        return 0;
-    }
   }
 }
