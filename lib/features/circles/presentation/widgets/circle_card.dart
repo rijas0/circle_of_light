@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:circle_of_light/core/theme/app_colors.dart';
-import 'package:circle_of_light/features/circles/data/models/circle_preview.dart';
-import 'package:circle_of_light/shared/widgets/app_card.dart';
-import 'package:circle_of_light/shared/widgets/progress_badge.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/circle_preview.dart';
+import '../../../../shared/widgets/app_card.dart';
+import '../../../../shared/widgets/progress_badge.dart';
 
 class CircleCard extends StatelessWidget {
   const CircleCard({super.key, required this.circle});

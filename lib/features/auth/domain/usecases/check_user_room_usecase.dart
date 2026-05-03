@@ -1,4 +1,4 @@
-import 'package:circle_of_light/features/auth/domain/repositories/room_repository.dart';
+import '../repositories/room_repository.dart';
 
 class CheckUserRoomUseCase {
   final RoomRepository repo;

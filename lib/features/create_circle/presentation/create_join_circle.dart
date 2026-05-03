@@ -1,7 +1,8 @@
-import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../auth/presentation/providers/provider.dart';
 
 class CreateJoinCircle extends ConsumerWidget {
   const CreateJoinCircle({super.key});
