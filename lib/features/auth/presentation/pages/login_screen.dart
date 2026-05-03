@@ -71,7 +71,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0F14),
       body: Stack(
         children: [
           // Background radial glow
