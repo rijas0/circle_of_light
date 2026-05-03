@@ -1,4 +1,4 @@
-import 'package:circle_of_light/features/circles/domain/entities/circle.dart';
+import '../../domain/entities/circle.dart';
 
 class CirclePreview extends Circle {
   const CirclePreview({

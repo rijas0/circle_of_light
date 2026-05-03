@@ -1,29 +1,21 @@
-import 'package:circle_of_light/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AppShell extends StatefulWidget {
-  final Widget child;
-  const AppShell({super.key, required this.child});
+import '../core/constants/app_strings.dart';
 
-  @override
-  State<AppShell> createState() => _AppShellState();
-}
+class AppShell extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+  const AppShell({super.key, required this.navigationShell});
 
-class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
-    int currentIndex = _computeIndex(location);
     return Scaffold(
-      body: widget.child,
+      body: navigationShell,
       bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color(0xFF07120A),
-        labelTextStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-        selectedIndex: currentIndex,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) {
-          final routes = ['/dash', '/quran', '/tasks', '/reflections', '/profile'];
-          context.go(routes[index]);
+          navigationShell.goBranch(index);
         },
         destinations: const [
           NavigationDestination(
@@ -37,9 +29,9 @@ class _AppShellState extends State<AppShell> {
             label: AppStrings.quranTab,
           ),
           NavigationDestination(
-            icon: Icon(Icons.checklist_outlined),
-            selectedIcon: Icon(Icons.checklist_rounded),
-            label: AppStrings.tasksTab,
+            icon: Icon(Icons.group_outlined),
+            selectedIcon: Icon(Icons.group_rounded),
+            label: AppStrings.circleTab,
           ),
           NavigationDestination(
             icon: Icon(Icons.edit_note_outlined),
@@ -54,23 +46,5 @@ class _AppShellState extends State<AppShell> {
         ],
       ),
     );
-  }
-
-  int _computeIndex(String location) {
-    switch (location) {
-      case '/dash':
-      case '/':
-        return 0;
-      case '/quran':
-        return 1;
-      case '/tasks':
-        return 2;
-      case '/reflections':
-        return 3;
-      case '/profile':
-        return 4;
-      default:
-        return 0;
-    }
   }
 }

@@ -1,21 +1,20 @@
-import 'package:circle_of_light/app/app_shell.dart';
-import 'package:circle_of_light/core/utils/go_router_refresh_notifier.dart';
-import 'package:circle_of_light/features/auth/presentation/pages/login_screen.dart';
-import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
-import 'package:circle_of_light/features/circles/presentation/pages/circle_dashboard_page.dart';
-import 'package:circle_of_light/features/create_circle/presentation/create_join_circle.dart';
-import 'package:circle_of_light/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:circle_of_light/features/get_started/presentation/get_started_page.dart';
-import 'package:circle_of_light/features/profile/presentation/pages/profile_page.dart';
-import 'package:circle_of_light/features/quran/presentation/pages/all_surahs_screen.dart';
-import 'package:circle_of_light/features/reflections/presentation/pages/reflections_page.dart';
-import 'package:circle_of_light/features/tasks/presentation/pages/tasks_page.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../app/app_shell.dart';
+import '../core/utils/go_router_refresh_notifier.dart';
+import '../features/auth/presentation/pages/login_screen.dart';
+import '../features/auth/presentation/providers/provider.dart';
+import '../features/circles/presentation/pages/circles_list_screen.dart';
+import '../features/create_circle/presentation/create_join_circle.dart';
+import '../features/dashboard/presentation/pages/dashboard_screen.dart';
+import '../features/get_started/presentation/get_started_screen.dart';
+import '../features/profile/presentation/pages/profile_screen.dart';
+import '../features/quran/presentation/pages/all_surahs_screen.dart';
+import '../features/reflections/presentation/pages/reflections_screen.dart';
+
 final goRouterProvider = Provider<GoRouter>((ref) {
-  // final authState = ref.watch(authNotifierProvider);
-  //final authNotifier = ref.read(authNotifierProvider.notifier);
   final notifier = ref.watch(authNotifierProvider.notifier);
 
   return GoRouter(
@@ -59,32 +58,50 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/create-join-room',
         builder: (context, state) => const CreateJoinCircle(),
       ),
-      ShellRoute(
-        builder: (context, state, child) => AppShell(child: child),
-        routes: [
-          GoRoute(
-            path: '/dash',
-            builder: (context, state) => const DashboardPage(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return AppShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/dash',
+                builder: (context, state) => const DashboardScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/quran',
-            builder: (context, state) => const AllSurahsScreen(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/quran',
+                builder: (context, state) => const AllSurahsScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/tasks',
-            builder: (context, state) => const TasksPage(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/circle',
+                builder: (context, state) => const CirclesScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/circle',
-            builder: (context, state) => const CircleDashboard(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/reflections',
+                builder: (context, state) => const ReflectionsScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/reflections',
-            builder: (context, state) => const ReflectionsScreen(),
-          ),
-          GoRoute(
-            path: '/profile',
-            builder: (context, state) => const ProfileScreen(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
+              ),
+            ],
           ),
         ],
       ),

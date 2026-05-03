@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'package:circle_of_light/core/theme/app_colors.dart';
+import 'app_colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
     final scheme =
         ColorScheme.fromSeed(
           seedColor: AppColors.emerald,
-          brightness: Brightness.light,
+          brightness: Brightness.dark,
         ).copyWith(
           primary: AppColors.emerald,
           secondary: AppColors.gold,
-          surface: AppColors.white,
+          surface: AppColors.surface,
         );
 
     return ThemeData(
       useMaterial3: true,
       fontFamily: 'Noto Sans Arabic',
       colorScheme: scheme,
-      // scaffoldBackgroundColor: AppColors.cream,
-      scaffoldBackgroundColor:const Color(0xFF07120A),
+      scaffoldBackgroundColor: AppColors.background,
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           fontSize: 32,
@@ -60,13 +59,13 @@ class AppTheme {
         foregroundColor: AppColors.textPrimary,
       ),
       cardTheme: CardThemeData(
-        color: AppColors.white,
+        color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.white,
-        indicatorColor: AppColors.mist,
+        backgroundColor: AppColors.background,
+        indicatorColor: AppColors.ink,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           return TextStyle(
             fontWeight: states.contains(WidgetState.selected)
@@ -75,12 +74,36 @@ class AppTheme {
             color: AppColors.textPrimary,
           );
         }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          return IconThemeData(
+            color: states.contains(WidgetState.selected)
+                ? AppColors.textPrimary
+                : AppColors.textSecondary,
+          );
+        }),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.mist,
-        selectedColor: AppColors.mist,
+        backgroundColor: AppColors.surfaceVariant,
+        selectedColor: AppColors.surfaceVariant,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
         side: BorderSide.none,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.surface,
+        hintStyle: const TextStyle(color: AppColors.textSecondary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.surfaceVariant),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.surfaceVariant),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.emerald),
+        ),
       ),
     );
   }
