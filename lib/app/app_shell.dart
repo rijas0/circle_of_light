@@ -1,6 +1,7 @@
-import 'package:circle_of_light/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../core/constants/app_strings.dart';
 
 class AppShell extends StatefulWidget {
   final Widget child;
@@ -22,7 +23,7 @@ class _AppShellState extends State<AppShell> {
         labelTextStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white)),
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
-          final routes = ['/dash', '/quran', '/tasks', '/reflections', '/profile'];
+          final routes = ['/dash', '/quran', '/circle', '/reflections', '/profile'];
           context.go(routes[index]);
         },
         destinations: const [
@@ -37,9 +38,9 @@ class _AppShellState extends State<AppShell> {
             label: AppStrings.quranTab,
           ),
           NavigationDestination(
-            icon: Icon(Icons.checklist_outlined),
-            selectedIcon: Icon(Icons.checklist_rounded),
-            label: AppStrings.tasksTab,
+            icon: Icon(Icons.group_outlined),
+            selectedIcon: Icon(Icons.group_rounded),
+            label: AppStrings.circleTab,
           ),
           NavigationDestination(
             icon: Icon(Icons.edit_note_outlined),
@@ -63,7 +64,7 @@ class _AppShellState extends State<AppShell> {
         return 0;
       case '/quran':
         return 1;
-      case '/tasks':
+      case '/circle':
         return 2;
       case '/reflections':
         return 3;
