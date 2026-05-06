@@ -1,10 +1,30 @@
 import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
+import 'package:circle_of_light/features/create_circle/presentation/create_circle_sheet.dart';
+import 'package:circle_of_light/features/create_circle/presentation/join_circle_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class CreateJoinCircle extends ConsumerWidget {
   const CreateJoinCircle({super.key});
+
+  void showCreateCircleSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const CreateCircleSheet(),
+  );
+}
+
+void showJoinCircleSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const JoinCircleSheet(),
+  );
+}
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,10 +69,7 @@ class CreateJoinCircle extends ConsumerWidget {
 
   Widget _buildCreateCard(WidgetRef ref, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        ref.read(authNotifierProvider.notifier).setHasJoinedRoom();
-        context.go('/dash');
-      },
+      onTap: () =>showCreateCircleSheet(context),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -115,10 +132,7 @@ class CreateJoinCircle extends ConsumerWidget {
 
   Widget _buildJoinCard(WidgetRef ref, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        ref.read(authNotifierProvider.notifier).setHasJoinedRoom();
-        context.go('/dash');
-      },
+      onTap: () =>showJoinCircleSheet(context),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
