@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
+  
 
   @override
   Widget build(BuildContext context) {

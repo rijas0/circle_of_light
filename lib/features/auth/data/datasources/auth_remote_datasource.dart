@@ -27,7 +27,7 @@ class AuthRemoteDataSource {
             authorizationEndpoint: issuer,
             tokenEndpoint: tokenEndpoint,
           ),
-          scopes: ['openid', 'profile'],
+          scopes: ['openid','profile',],
         ),
       );
 
@@ -42,7 +42,7 @@ class AuthRemoteDataSource {
 
       final response = await dio.post(
         'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/fetchToken',
-        data: {"code": code, "code_verifier": result.codeVerifier},
+        data: {"code": code,"code_verifier": result.codeVerifier},
       );
 
       log('response: ${response.data}');

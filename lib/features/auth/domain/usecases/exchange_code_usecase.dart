@@ -1,4 +1,4 @@
-import '../entities/user_entitie.dart';
+import '../entities/auth_result.dart';
 import '../repositories/auth_repository.dart';
 
 class ExchangeCodeUseCase {
@@ -6,7 +6,7 @@ class ExchangeCodeUseCase {
 
   ExchangeCodeUseCase(this.repository);
 
-  Future<UserEntity> call(String code) {
+  Future<AuthResult> call(String code) {
     return repository.exchangeCode(code);
   }
 }

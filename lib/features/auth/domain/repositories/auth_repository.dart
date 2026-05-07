@@ -1,6 +1,6 @@
-import '../entities/user_entitie.dart';
+import '../entities/auth_result.dart';
 
 abstract class AuthRepository {
-  Future<UserEntity> exchangeCode(String code);
-  Future<UserEntity> loginWithQuran();
+  Future<AuthResult> exchangeCode(String code);
+  Future<AuthResult> loginWithQuran();
 }

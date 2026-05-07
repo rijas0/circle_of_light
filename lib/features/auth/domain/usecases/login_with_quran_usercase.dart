@@ -1,4 +1,4 @@
-import '../entities/user_entitie.dart';
+import '../entities/auth_result.dart';
 import '../repositories/auth_repository.dart';
 
 class LoginWithQuranUseCase {
@@ -6,7 +6,7 @@ class LoginWithQuranUseCase {
 
   LoginWithQuranUseCase(this.repository);
 
-  Future<UserEntity> call() {
+  Future<AuthResult> call() {
     return repository.loginWithQuran();
   }
 }
