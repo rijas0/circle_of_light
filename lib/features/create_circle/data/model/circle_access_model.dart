@@ -1,4 +1,4 @@
-import 'package:circle_of_light/features/create_circle/domain/circle_access_entity.dart';
+import 'package:circle_of_light/features/create_circle/domain/entity/circle_access_entity.dart';
 
 class CircleAccessModel extends CircleAccessEntity {
   CircleAccessModel({
