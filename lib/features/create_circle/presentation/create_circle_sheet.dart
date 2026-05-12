@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 
 class CreateCircleSheet extends StatefulWidget {
   const CreateCircleSheet();
-
   @override
   State<CreateCircleSheet> createState() => CreateCircleSheetState();
 }
 
 class CreateCircleSheetState extends State<CreateCircleSheet> {
   final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
   String _focus = 'Tilawah';
   String _privacy = 'Public';
   String _level = 'Beginner';
 
   final _focuses = ['Tilawah', 'Hifz', 'Tadabbur', 'Tajweed'];
-  final _levels = ['Beginner', 'Intermediate', 'Advanced'];
+  // final _levels = ['Beginner', 'Intermediate', 'Advanced'];
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,12 @@ class CreateCircleSheetState extends State<CreateCircleSheet> {
               // Circle Name
               _label('Circle Name'),
               const SizedBox(height: 8),
-              _textField(_nameController, 'e.g. Surah Al-Kahf Friday Circle', Icons.circle_outlined),
+              _textField(_nameController, 'e.g. Surah Al-Kahf Friday Circle', Icons.circle_outlined,14),
+              const SizedBox(height: 20),
+
+              _label('Circle Description'),
+              const SizedBox(height: 8),
+              _textField(_descriptionController, 'e.g. Surah Al-Kahf Friday Circle', Icons.info,24),
               const SizedBox(height: 20),
 
               // Focus
@@ -71,13 +76,13 @@ class CreateCircleSheetState extends State<CreateCircleSheet> {
               const SizedBox(height: 20),
 
               // Level
-              _label('Level'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: _levels.map((l) => _chip(l, _level == l, () => setState(() => _level = l))).toList(),
-              ),
-              const SizedBox(height: 20),
+              // _label('Level'),
+              // const SizedBox(height: 8),
+              // Wrap(
+              //   spacing: 8,
+              //   children: _levels.map((l) => _chip(l, _level == l, () => setState(() => _level = l))).toList(),
+              // ),
+              // const SizedBox(height: 20),
 
               // Privacy
               _label('Privacy'),
@@ -117,7 +122,7 @@ class CreateCircleSheetState extends State<CreateCircleSheet> {
   Widget _label(String text) => Text(text,
       style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600));
 
-  Widget _textField(TextEditingController ctrl, String hint, IconData icon) {
+  Widget _textField(TextEditingController ctrl, String hint, IconData icon, double padding) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF152230),
@@ -132,7 +137,7 @@ class CreateCircleSheetState extends State<CreateCircleSheet> {
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.28), fontSize: 13),
           prefixIcon: Icon(icon, color: Colors.white.withOpacity(0.3), size: 18),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding:  EdgeInsets.symmetric(horizontal: padding, vertical: padding),
         ),
       ),
     );

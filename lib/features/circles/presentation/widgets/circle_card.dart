@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../data/models/circle_preview.dart';
+import '../../data/models/circle_model.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/progress_badge.dart';
 
 class CircleCard extends StatelessWidget {
   const CircleCard({super.key, required this.circle});
 
-  final CirclePreview circle;
+  final CircleModel circle;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class CircleCard extends StatelessWidget {
                 ),
               ),
               ProgressBadge(
-                label: circle.isPrivate ? 'Private' : 'Shareable',
-                icon: circle.isPrivate
+                label: circle.isPublic ? 'Private' : 'Shareable',
+                icon: circle.isPublic
                     ? Icons.lock_rounded
                     : Icons.public_rounded,
                 backgroundColor: AppColors.mist,
@@ -36,7 +36,7 @@ class CircleCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            circle.description,
+            circle.description ?? '',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
