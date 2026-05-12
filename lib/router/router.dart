@@ -7,7 +7,7 @@ import '../core/utils/go_router_refresh_notifier.dart';
 import '../features/auth/presentation/pages/login_screen.dart';
 import '../features/auth/presentation/providers/provider.dart';
 import '../features/circles/presentation/pages/circles_list_screen.dart';
-import '../features/create_circle/presentation/create_join_circle.dart';
+import '../features/create_circle/presentation/page/create_join_circle.dart';
 import '../features/dashboard/presentation/pages/dashboard_screen.dart';
 import '../features/get_started/presentation/get_started_screen.dart';
 import '../features/profile/presentation/pages/profile_screen.dart';
