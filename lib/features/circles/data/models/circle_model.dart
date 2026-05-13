@@ -20,7 +20,7 @@ class CircleModel extends CircleEntity {
     super.avatarUrl,
   });
 
-  factory CircleModel.fromJson(Map<String, dynamic> json) {
+  factory CircleModel.fromJSON(Map<String, dynamic> json) {
     return CircleModel(
       circleId: json['id'] ?? '',
       circleName: json['name'] ?? '',
