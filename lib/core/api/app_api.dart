@@ -7,6 +7,6 @@ const String apiBaseUrl = 'https://apis-prelive.quran.foundation';
 final String authorizationEndpoint = '$authBaseUrl/oauth/authorize';
 final String tokenEndpoint = '$authBaseUrl/oauth2/token'; 
 final String circleCreationEndpoint = 'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/createCircle';
-final String joinCircleEndpoint = 'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/joinCircle';
+final String joinCircleEndpoint = 'https://qyyvgxrypolktxowctwu.supabase.co/functions/v1/joinRoom';
 final String homeDetailsEndpoint = '';
 final String circleDetailsEndpoint = '';
