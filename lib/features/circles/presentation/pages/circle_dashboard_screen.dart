@@ -226,13 +226,13 @@ class _CircleDashboardState extends State<CircleDashboard> {
                 'Circle Progress',
                 style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
               ),
-              GestureDetector(
-                onTap: () {},
-                child: const Text(
-                  'View all',
-                  style: TextStyle(color: Color(0xFF22C55E), fontSize: 13),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: const Text(
+              //     'View all',
+              //     style: TextStyle(color: Color(0xFF22C55E), fontSize: 13),
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(height: 16),
@@ -282,7 +282,7 @@ class _CircleDashboardState extends State<CircleDashboard> {
                     const SizedBox(height: 10),
                     _buildStatRow(
                       Icons.people_outline,
-                      'Members Active',
+                      'Completed Members',
                       '6 / 8',
                       const Color(0xFF1B4332),
                     ),

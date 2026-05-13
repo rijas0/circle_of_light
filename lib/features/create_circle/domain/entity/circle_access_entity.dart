@@ -3,7 +3,7 @@ import 'package:circle_of_light/features/create_circle/util/focus_enum.dart';
 class CircleAccessEntity {
   final String name;
   final String? description;
-  final Focus focus;
+  final String focus;
   final CirclePrivacy privacy;
 
   CircleAccessEntity({

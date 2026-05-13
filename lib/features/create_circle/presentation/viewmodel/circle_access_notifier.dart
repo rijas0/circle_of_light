@@ -23,7 +23,6 @@ class CircleAccessNotifier extends StateNotifier<CircleAccessState> {
         focus: focus,
         privacy: privacy,
       );
-
       state = state.copyWith(isLoading: false, circle: circle);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());

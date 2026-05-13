@@ -1,3 +1,4 @@
+import 'package:circle_of_light/features/circles/data/models/circle_progress_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -8,42 +9,48 @@ import '../../../../shared/widgets/section_title.dart';
 class CirclesScreen extends StatelessWidget {
   const CirclesScreen({super.key});
 
-  static const _circles = [
+  static List circles = [
     CircleModel(
-      id: 'circle-1',
-      name: 'Morning Light',
+      circleId: 'circle-1',
+      circleName: 'Morning Light',
       memberCount: 5,
-      streakDays: 12,
       isPublic: true,
-      description:
+      circleDescription:
           'A close-knit circle for short morning recitation and check-ins.',
       inviteId: 222,
       creatorId: 111,
-      focus: '',
+      focus: '', 
+      circleProgress: CircleProgressModel(completedMembersCount: '', completedTaskCount: '', overallPercentage: '', totalTaskCount: ''),
+       membersList: [], 
+       taskList: [],
     ),
     CircleModel(
-      id: 'circle-2',
-      name: 'Family Reflection',
+      circleId: 'circle-2',
+      circleName: 'Family Reflection',
       memberCount: 4,
-      streakDays: 8,
 
-      description: 'A family rhythm focused on consistency after Ramadan.',
+      circleDescription: 'A family rhythm focused on consistency after Ramadan.',
       isPublic: false,
       inviteId: 333,
       creatorId: 333,
       focus: '',
+      taskList: [],
+      membersList: [],
+      circleProgress: CircleProgressModel(completedMembersCount: '', completedTaskCount:'', overallPercentage: '', totalTaskCount:'')
     ),
     CircleModel(
-      id: 'circle-3',
-      name: 'Campus Companions',
+      circleId: 'circle-3',
+      circleName: 'Campus Companions',
       memberCount: 5,
-      streakDays: 17,
-      description:
+      circleDescription:
           'A student-led space for accountability, reminders, and support.',
       isPublic: false,
       inviteId: 2233,
       creatorId: 222,
+      membersList: [],
       focus: '',
+      taskList: [],
+      circleProgress: CircleProgressModel(completedMembersCount: '', completedTaskCount:'', overallPercentage:'', totalTaskCount:'')
     ),
   ];
 
@@ -69,7 +76,7 @@ class CirclesScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          for (final circle in _circles) ...[
+          for (final circle in circles) ...[
             CircleCard(circle: circle),
             const SizedBox(height: 14),
           ],

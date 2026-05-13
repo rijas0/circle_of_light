@@ -1,3 +1,4 @@
+import 'package:circle_of_light/features/circles/presentation/pages/circle_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -83,7 +84,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/circle',
-                builder: (context, state) => const CirclesScreen(),
+                builder: (context, state) => const CircleDashboard(),
               ),
             ],
           ),
