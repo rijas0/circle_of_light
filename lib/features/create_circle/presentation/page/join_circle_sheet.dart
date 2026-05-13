@@ -1,15 +1,73 @@
+import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
+import 'package:circle_of_light/features/create_circle/presentation/provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class JoinCircleSheet extends StatefulWidget {
-  const JoinCircleSheet();
+class JoinCircleSheet extends ConsumerStatefulWidget {
+  const JoinCircleSheet({super.key});
 
   @override
-  State<JoinCircleSheet> createState() => JoinCircleSheetState();
+  ConsumerState<JoinCircleSheet> createState() => JoinCircleSheetState();
 }
 
-class JoinCircleSheetState extends State<JoinCircleSheet> {
+class JoinCircleSheetState extends ConsumerState<JoinCircleSheet> {
   final _codeController = TextEditingController();
-  bool _isLoading = false;
+
+  Future<void> handleJoinCircle() async {
+    final notifier = ref.read(circleNotifierProvider.notifier);
+    final authNotifier = ref.read(authNotifierProvider.notifier);
+
+    final inviteCode = _codeController.text.trim();
+    if (inviteCode.isEmpty) return;
+
+    if (!mounted) return;
+
+    final rootNavigator = Navigator.of(context, rootNavigator: true);
+    Navigator.pop(context);
+
+    showDialog(
+      context: rootNavigator.context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: const Color(0xFF0F1923),
+        content: Row(
+          children: [
+            const CircularProgressIndicator(color: Color(0xFF3B82F6)),
+            const SizedBox(width: 16),
+            const Text(
+              'Joining circle...',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final updatedState = await notifier.joinCircle(inviteCode: inviteCode);
+
+    if (rootNavigator.context.mounted) {
+      rootNavigator.pop();
+    }
+
+    if (!rootNavigator.context.mounted) return;
+
+    if (updatedState.error != null) {
+      ScaffoldMessenger.of(rootNavigator.context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to join circle. Please check your invite code.',
+            style: const TextStyle(overflow: TextOverflow.ellipsis),
+            maxLines: 2,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (updatedState.circle != null) {
+      authNotifier.setHasJoinedRoom();
+      rootNavigator.context.push('/dash');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,30 +171,18 @@ class JoinCircleSheetState extends State<JoinCircleSheet> {
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: _isLoading
-                    ? null
-                    : () {
-                        setState(() => _isLoading = true);
-                        Future.delayed(const Duration(seconds: 1), () {
-                          Navigator.pop(context);
-                        });
-                      },
+                onPressed: handleJoinCircle,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF3B82F6),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                   elevation: 0,
                 ),
-                child: _isLoading
-                    ? const SizedBox(
-                        width: 20, height: 20,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2))
-                    : const Text('Join Circle',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700)),
+                child: const Text('Join Circle',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700)),
               ),
             ),
           ],

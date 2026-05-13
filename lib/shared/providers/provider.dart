@@ -10,8 +10,8 @@ final tokenStorageProvider = Provider((ref) => TokenStorageService());
 final dioProvider = Provider<Dio>((ref) {
   final tokenStorage = ref.watch(tokenStorageProvider);
   final dio = Dio(BaseOptions(
-    connectTimeout: const Duration(seconds: 15),
-    receiveTimeout: const Duration(seconds: 15),
+    connectTimeout: const Duration(seconds: 60),
+    receiveTimeout: const Duration(seconds: 60),
   ));
   dio.interceptors.add(AuthInterceptor(tokenStorage));
   return dio;

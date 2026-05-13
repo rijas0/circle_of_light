@@ -46,6 +46,12 @@ class AuthRemoteDataSource {
       );
 
       log('response: ${response.data}');
+      log('response keys: ${response.data is Map ? (response.data as Map).keys.join(", ") : "not a map"}');
+      if (response.data is Map && (response.data as Map).containsKey('supabase_access_token')) {
+        log('access_token present: ${(response.data as Map)['supabase_access_token'].toString().substring(0, 20)}...');
+      } else {
+        log('access_token NOT found in response');
+      }
 
       return UserModel.fromJson(response.data);
       // const dummyData = {"id": "12", "name": "Rijas", "email": "rijas@0"};

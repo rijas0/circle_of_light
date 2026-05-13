@@ -8,18 +8,23 @@ class CircleAccessRepoImpl implements CircleAccessRepository {
 
   @override
   Future<CircleAccessModel> createCircle({
-    required String accessToken,
     required String name,
     required String description,
     required String focus,
     required String privacy,
   }) {
     return dataSource.createCircle(
-      accessToken: accessToken,
       name: name,
       description: description,
       focus: focus,
       privacy: privacy,
     );
+  }
+
+  @override
+  Future<CircleAccessModel> joinCircle({
+    required String inviteCode,
+  }) {
+    return dataSource.joinCircle(inviteCode: inviteCode);
   }
 }
