@@ -10,10 +10,10 @@ class CircleAccessModel extends CircleAccessEntity {
 
   factory CircleAccessModel.fromJson(Map<String, dynamic> json) {
     return CircleAccessModel(
-      name: json['name'],
-      focus: json['focus'],
-      privacy: json['privacy'],
-      description: json['description'] ?? '',
+      name: json['name'] as String? ?? '',
+      focus: json['focus'] as String? ?? '',
+      privacy: json['privacy'] as String? ?? (json['isPublic'] == true ? 'Public' : 'Private'),
+      description: json['description'] as String? ?? '',
     );
   }
   Map<String, dynamic> toJson() {

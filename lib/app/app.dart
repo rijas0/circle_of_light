@@ -6,22 +6,39 @@ import 'package:circle_of_light/core/constants/app_strings.dart';
 import 'package:circle_of_light/core/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CircleOfLightApp extends ConsumerWidget {
+class CircleOfLightApp extends ConsumerStatefulWidget {
   const CircleOfLightApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(goRouterProvider);
+  ConsumerState<CircleOfLightApp> createState() => _CircleOfLightAppState();
+}
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(authNotifierProvider.notifier).restoreSession();
-    });
+class _CircleOfLightAppState extends ConsumerState<CircleOfLightApp> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(authNotifierProvider.notifier).restoreSession();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = ref.watch(authNotifierProvider);
+    final router = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: router,
+      builder: authState.isInitializing ? (context, child) => _buildSplash() : null,
+    );
+  }
+
+  Widget _buildSplash() {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(color: Color(0xFF2ECC71)),
+      ),
     );
   }
 }

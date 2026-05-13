@@ -31,6 +31,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final isGetStartedPage = state.matchedLocation == '/';
       final isCreateJoinPage = state.matchedLocation == '/create-join-room';
 
+      if (authState.isInitializing) return null;
+
       if (!isLoggedIn) {
         return isLoginPage ? null : '/login';
       }

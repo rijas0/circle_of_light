@@ -14,14 +14,16 @@ class UserModel extends UserEntity {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final user = json['user'] as Map<String, dynamic>? ?? json;
+    final metadata = user['user_metadata'] as Map<String, dynamic>? ?? {};
     return UserModel(
-      id: json['user_id'] ?? '',
-      email: json['email'] ?? '',
-      name: json['full_name'] ?? '',
-      accessToken: json['access_token'] ?? '',
-      avatarUrl: json['avatar_url'] ?? '',
-      role: json['role'] ?? '',
-      createdAt: json['created_at'] ?? '',
+      id: user['id'] ?? '',
+      email: user['email'] ?? '',
+      name: metadata['full_name'] ?? user['full_name'] ?? '',
+      accessToken: json['supabase_access_token'] ?? json['access_token'] ?? '',
+      avatarUrl: user['avatar_url'] ?? '',
+      role: user['role'] ?? '',
+      createdAt: user['created_at'] ?? '',
     );
   }
 
