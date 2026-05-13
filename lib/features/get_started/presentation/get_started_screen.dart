@@ -1,19 +1,32 @@
+import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 
-class GetStartedScreen extends StatelessWidget {
+class GetStartedScreen extends ConsumerWidget {
   const GetStartedScreen({super.key});
   
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  icon: const Icon(Icons.logout_rounded, color: Colors.white38, size: 22),
+                  onPressed: () async {
+                    await ref.read(authNotifierProvider.notifier).logout();
+                    if (context.mounted) context.go('/login');
+                  },
+                ),
+              ),
               const Spacer(flex: 2),
 
               // Logo

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
 import 'package:circle_of_light/features/create_circle/presentation/provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class JoinCircleSheetState extends ConsumerState<JoinCircleSheet> {
     final notifier = ref.read(circleNotifierProvider.notifier);
     final authNotifier = ref.read(authNotifierProvider.notifier);
 
-    final inviteCode = _codeController.text.trim();
+    final inviteCode = _codeController.text;
     if (inviteCode.isEmpty) return;
 
     if (!mounted) return;
@@ -44,6 +46,8 @@ class JoinCircleSheetState extends ConsumerState<JoinCircleSheet> {
       ),
     );
 
+    log('invite code $inviteCode');
+
     final updatedState = await notifier.joinCircle(inviteCode: inviteCode);
 
     if (rootNavigator.context.mounted) {
@@ -53,10 +57,12 @@ class JoinCircleSheetState extends ConsumerState<JoinCircleSheet> {
     if (!rootNavigator.context.mounted) return;
 
     if (updatedState.error != null) {
+      log(updatedState.error ?? 'Something error');
       ScaffoldMessenger.of(rootNavigator.context).showSnackBar(
         SnackBar(
           content: Text(
-            'Failed to join circle. Please check your invite code.',
+            // 'Failed to join circle. Please check your invite code.',
+            updatedState.error ?? 'Error something wrong',
             style: const TextStyle(overflow: TextOverflow.ellipsis),
             maxLines: 2,
           ),

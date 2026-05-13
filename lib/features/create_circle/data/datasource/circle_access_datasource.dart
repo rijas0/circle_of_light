@@ -50,7 +50,7 @@ class CircleAccessDatasource {
       final token = await tokenStorage.getAccessToken();
       final response = await dio.post(
         joinCircleEndpoint,
-        data: {"inviteCode": inviteCode},
+        data: {"invite_code": inviteCode},
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
 
