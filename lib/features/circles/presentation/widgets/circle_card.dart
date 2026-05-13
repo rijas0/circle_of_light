@@ -20,7 +20,7 @@ class CircleCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  circle.name,
+                  circle.circleName,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -36,7 +36,7 @@ class CircleCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            circle.description ?? '',
+            circle.circleDescription ?? '',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
@@ -47,10 +47,10 @@ class CircleCard extends StatelessWidget {
                 label: '${circle.memberCount} members',
               ),
               const SizedBox(width: 16),
-              _InfoPoint(
-                icon: Icons.local_fire_department_rounded,
-                label: '${circle.streakDays} day streak',
-              ),
+              // _InfoPoint(
+              //   icon: Icons.local_fire_department_rounded,
+              //   label: '${circle.streakDays} day streak',
+              // ),
             ],
           ),
         ],

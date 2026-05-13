@@ -13,17 +13,25 @@ class CircleAccessDatasource {
     required String focus,
     required String privacy,
   }) async {
-    final response = await dio.post(
-      circleCreationEndpoint,
-      data: {
-        "name": name,
-        "description": description,
-        "focus": focus,
-        "privacy": privacy,
-      },
-      options: Options(headers: {"Authorization": "Bearer $accessToken"}),
-    );
+    try {
+      final response = await dio.post(
+        circleCreationEndpoint,
+        data: {
+          "name": name,
+          "description": description,
+          "focus": focus,
+          "privacy": privacy,
+        },
+        options: Options(headers: {"Authorization": "Bearer $accessToken"}),
+      );
 
-    return CircleAccessModel.fromJson(response.data['circle']);
+      if (response.data == null) {
+        throw Exception("User cancelled login");
+      }
+       return CircleAccessModel.fromJson(response.data['circle']);
+    } catch (e) {
+      throw Exception("Login failed: $e");
+    }
+   
   }
 }

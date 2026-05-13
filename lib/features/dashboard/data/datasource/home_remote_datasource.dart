@@ -1,9 +1,10 @@
+import 'package:circle_of_light/core/api/app_api.dart';
+import 'package:circle_of_light/features/dashboard/data/model/home_model.dart';
 import 'package:dio/dio.dart';
 
-class CircleRemoteDataSource {
+class HomeRemoteDatasource {
   final Dio dio;
-
-  CircleRemoteDataSource(this.dio);
+  HomeRemoteDatasource(this.dio);
 
   Future<HomeModel> getHomeDetails({
     required String accessToken
@@ -18,5 +19,4 @@ class CircleRemoteDataSource {
       throw Exception("Failed to load Home Details");
     }
   }
-  
 }

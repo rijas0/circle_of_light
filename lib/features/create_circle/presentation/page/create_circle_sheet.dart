@@ -1,6 +1,8 @@
+import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
 import 'package:circle_of_light/features/create_circle/presentation/provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateCircleSheet extends ConsumerStatefulWidget {
   const CreateCircleSheet({super.key});
@@ -13,21 +15,156 @@ class CreateCircleSheetState extends ConsumerState<CreateCircleSheet> {
   final _descriptionController = TextEditingController();
   String _focus = 'Tilawah';
   String _privacy = 'Public';
-  String _level = 'Beginner';
 
   final _focuses = ['Tilawah', 'Hifz', 'Tadabbur', 'Tajweed'];
   // final _levels = ['Beginner', 'Intermediate', 'Advanced'];
 
   Future<void> handleCreateCircle() async {
-    await ref
-        .read(circleNotifierProvider.notifier)
-        .createCircleUseCase(
-          accessToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6ImEzYzhjMTJiLTFkNmYtNDAxNi1iMzU4LTFlNzNhYjY5MGM0NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3F5eXZneHJ5cG9sa3R4b3djdHd1LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJlYzkzNzJiMS0wZjQ0LTQwNzYtOTNkNC0zYjdlMDc1MzNhODkiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc4NTcyNDgxLCJpYXQiOjE3Nzg1Njg4ODEsImVtYWlsIjoicmlqYXNubTg0QGdtYWlsLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6InJpamFzbm04NCJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc4NTY4ODgxfV0sInNlc3Npb25faWQiOiJlNzk4NjM1NS00OGRmLTQyNjgtYjc3Zi1iOGU3MmJmYmQ0ZDYiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.ADbmMb8oN2NoRXe0xFuO1oVT8CsmT9SAAdosXEtBKEQpLWLPOMD1dfZEh_fYVbQ0PNOiIrgBN3x64peok2lHqQ",
-          name: _nameController.text,
-          description: _descriptionController.text,
-          focus: _focus,
-          privacy: _privacy,
-        );
+    final messenger = ScaffoldMessenger.of(context);
+    if (mounted) {
+      Navigator.pop(context);
+    }
+    // final notifier = ref.read(circleNotifierProvider.notifier);
+    // await notifier.createCircle(
+    //   accessToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6ImEzYzhjMTJiLTFkNmYtNDAxNi1iMzU4LTFlNzNhYjY5MGM0NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3F5eXZneHJ5cG9sa3R4b3djdHd1LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJlYzkzNzJiMS0wZjQ0LTQwNzYtOTNkNC0zYjdlMDc1MzNhODkiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc4NTgxNTk0LCJpYXQiOjE3Nzg1Nzc5OTQsImVtYWlsIjoicmlqYXNubTg0QGdtYWlsLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6InJpamFzbm04NCJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc4NTc3OTk0fV0sInNlc3Npb25faWQiOiJmNDEyYzNmYS03MWZkLTRjYzctYTA0Ni1iMWZjY2U1MzMzMjciLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.SCMne7lhx5p1Ktfk69brX3M6yLsFWw3j37rxqikK7HE-8qF34U8Kcn_YWVGYqI7daVc6M9qwLJn1VgoUznpp_A",
+    //   name: _nameController.text,
+    //   description: _descriptionController.text,
+    //   focus: _focus,
+    //   privacy: _privacy,
+    // );
+    
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.all(28),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF1A1A2E), Color(0xFF16213E)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.08),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF6C63FF).withOpacity(0.25),
+              blurRadius: 40,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Animated icon container
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF95E9B8), Color(0xFF3B3B3B)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6C63FF).withOpacity(0.4),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.meeting_room_rounded,
+                color: Colors.white,
+                size: 34,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Title
+            const Text(
+              'Creating Your Circle',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // Subtitle
+            Text(
+              'Setting up your space, just a moment...',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 13.5,
+                height: 1.4,
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            // Progress indicator
+            ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: LinearProgressIndicator(
+                minHeight: 4,
+                backgroundColor: Colors.white.withOpacity(0.08),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFF2ECC71),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            Text(
+              'Please do not close the app',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.3),
+                fontSize: 11.5,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+      },
+    );
+    final circleState = ref.read(circleNotifierProvider);
+    if (circleState.error != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            circleState.error!,
+            style: TextStyle(overflow: TextOverflow.ellipsis),
+            maxLines: 2,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (circleState.circle != null) {
+      // ref.read(authNotifierProvider.notifier).setHasJoinedRoom();
+      // context.go('/dash');
+    }
+    // await Future.delayed(Duration(seconds: 10));
+    // if(mounted) Navigator.pop(context);
+    ref.read(authNotifierProvider.notifier).setHasJoinedRoom();
+    if(mounted) context.push('/dash');
   }
 
   @override
