@@ -17,7 +17,7 @@ import 'package:riverpod/riverpod.dart';
 final appAuthProvider = Provider((ref) => FlutterAppAuth());
 
 final remoteDataSourceProvider = Provider(
-  (ref) => AuthRemoteDataSource(ref.read(dioProvider), ref.read(appAuthProvider)),
+  (ref) => AuthRemoteDataSource(ref.read(dioProvider), ref.read(appAuthProvider), ref.read(tokenStorageProvider)),
 );
 
 final authRepositoryProvider = Provider(
@@ -46,6 +46,7 @@ final authNotifierProvider =
     ref.read(exchangeCodeUseCaseProvider),
     ref.read(loginUseCaseProvider),
     ref.read(checkUserRoomUseCase),
+    ref.read(authRepositoryProvider),
     ref.read(tokenStorageProvider),
   );
 });

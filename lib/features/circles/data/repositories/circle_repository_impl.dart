@@ -7,7 +7,7 @@ class CircleRepositoryImpl implements CircleRepository{
 
   CircleRepositoryImpl(this.dataSource);
   @override
-  Future<CircleModel> getCircleDetails({required String accessToken}) async{
-    return dataSource.getCircleDetails(accessToken: accessToken);
+  Future<List<CircleModel>> getCircleDetails() async {
+    return dataSource.getCircleDetails();
   }
 }
