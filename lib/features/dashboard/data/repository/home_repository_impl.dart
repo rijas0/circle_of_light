@@ -8,7 +8,7 @@ class HomeRepositoryImpl implements HomeRepository{
   HomeRepositoryImpl(this.datasource);
   
   @override
-  Future<HomeModel> getHomeDetails({required String accessToken}) {
-    return datasource.getHomeDetails(accessToken: accessToken);
+  Future<HomeModel> getHomeDetails() {
+    return datasource.getHomeDetails();
   }
 }

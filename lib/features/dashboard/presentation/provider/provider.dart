@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:riverpod/riverpod.dart';
 
 final homeRemoteDatasourceProvider = Provider(
-  (ref) => HomeRemoteDatasource(ref.read(dioProvider)),
+  (ref) => HomeRemoteDatasource(ref.read(dioProvider),ref.read(tokenStorageProvider)),
 );
 
 final homeRepositoryProvider = Provider(
@@ -19,8 +19,6 @@ final homeUseCaseProvider = Provider(
   (ref) => HomeUseCase(ref.read(homeRepositoryProvider)),
 );
 
-final homeNotifierProvider = Provider(
-  (ref) => StateNotifierProvider<HomeNotifier, HomeState>(
-    (ref) => HomeNotifier(ref.read(homeUseCaseProvider)),
-  ),
+final homeNotifierProvider = StateNotifierProvider<HomeNotifier, HomeState>(
+  (ref) => HomeNotifier(ref.read(homeUseCaseProvider)),
 );

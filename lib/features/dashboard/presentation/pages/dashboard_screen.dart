@@ -1,4 +1,11 @@
+import 'dart:ffi';
+
+import 'package:circle_of_light/features/circles/data/models/circle_model.dart';
+import 'package:circle_of_light/features/dashboard/data/model/home_model.dart';
+import 'package:circle_of_light/features/dashboard/presentation/provider/provider.dart';
+import 'package:circle_of_light/features/dashboard/presentation/viewmodel/home_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ── Colors ────────────────────────────────────────────────────────────────────
 const _bg = Color(0xFF0D1410);
@@ -8,41 +15,146 @@ const _green = Color(0xFF4ADE80);
 const _greenDark = Color(0xFF22C55E);
 const _greenDeep = Color(0xFF166534);
 const _amber = Color(0xFFD97706);
-const _amberBg = Color(0xFFFEF3C7);
-const _greenBg = Color(0xFF86EFAC);
 
-class DashboardScreen extends StatefulWidget {
+// ── Data Model ────────────────────────────────────────────────────────────────
+
+// class CircleMember {
+//   final String emoji;
+//   final bool completedToday;
+//   const CircleMember({required this.emoji, this.completedToday = false});
+// }
+
+// class QuranCircle {
+//   final String id;
+//   final String name;
+//   final String emoji;
+//   final int streak;
+//   final List<CircleMember> members;
+//   bool readToday;
+//   bool reflectedToday;
+//   bool isExpanded;
+
+//   QuranCircle({
+//     required this.id,
+//     required this.name,
+//     required this.emoji,
+//     required this.streak,
+//     required this.members,
+//     this.readToday = false,
+//     this.reflectedToday = false,
+//     this.isExpanded = false,
+//   });
+
+//   int get completedMembers => members.where((m) => m.completedToday).length;
+//   bool get isFullyDone => readToday && reflectedToday;
+// }
+
+// ── Screen ────────────────────────────────────────────────────────────────────
+
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _navIndex = 0;
-  bool _readToday = true;
-  bool _reflectedToday = true;
+  int completedCircleCount = 3;
+  int taskDoneToday = 3;
+  int circlePending = 4;
+  bool isExpanded = false;
+  bool readToday = false;
+  bool reflectedToday = false;
+
+  // final List<QuranCircle> _circles = [
+  //   QuranCircle(
+  //     id: '1',
+  //     name: 'Circle نور',
+  //     emoji: '🪔',
+  //     streak: 12,
+  //     readToday: true,
+  //     reflectedToday: true,
+  //     isExpanded: true,
+  //     members: const [
+  //       CircleMember(emoji: '🧕', completedToday: true),
+  //       CircleMember(emoji: '🧔', completedToday: true),
+  //       CircleMember(emoji: '🧑', completedToday: true),
+  //       CircleMember(emoji: '🌸', completedToday: true),
+  //       CircleMember(emoji: ''),
+  //     ],
+  //   ),
+  //   QuranCircle(
+  //     id: '2',
+  //     name: 'Circle Badr',
+  //     emoji: '🌙',
+  //     streak: 7,
+  //     readToday: true,
+  //     reflectedToday: true,
+  //     members: const [
+  //       CircleMember(emoji: '🌿', completedToday: true),
+  //       CircleMember(emoji: '⭐', completedToday: true),
+  //       CircleMember(emoji: '🦋', completedToday: true),
+  //       CircleMember(emoji: '🕊️', completedToday: true),
+  //     ],
+  //   ),
+  //   QuranCircle(
+  //     id: '3',
+  //     name: 'Circle Safa',
+  //     emoji: '🌿',
+  //     streak: 3,
+  //     members: const [
+  //       CircleMember(emoji: '🌺', completedToday: true),
+  //       CircleMember(emoji: ''),
+  //       CircleMember(emoji: ''),
+  //     ],
+  //   ),
+  // ];
+
+  // ── Computed ─────────────────────────────────────────────────────────────
+
+  // int get _circlesDone => _circles.where((c) => c.isFullyDone).length;
+  // int get _tasksDone => _circles.fold(
+  //       0,
+  //       (sum, c) => sum + (c.readToday ? 1 : 0) + (c.reflectedToday ? 1 : 0),
+  //     );
+  // int get _pendingCircles => _circles.length - _circlesDone;
+
+  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
+    //ref.read(homeNotifierProvider.notifier).getHomeDetails();
+    final vm = ref.read(homeNotifierProvider);
     return Scaffold(
+      backgroundColor: _bg,
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                children: [
-                  _buildGreeting(),
-                  const SizedBox(height: 20),
-                  _buildCheckInCard(),
-                  const SizedBox(height: 16),
-                  _buildCircleCard(),
-                  const SizedBox(height: 20),
-                  _buildImpactSection(),
-                  const SizedBox(height: 8),
-                ],
-              ),
+              child: vm.isLoading
+                  ? Center(
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 10),
+                          Text('Loading please wait'),
+                        ],
+                      ),
+                    )
+                  : ListView(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                      children: [
+                        _buildGreeting( vm.home),
+                        const SizedBox(height: 20),
+                        _buildCheckInSummaryCard(vm.home),
+                        const SizedBox(height: 16),
+                        _buildCirclesSection(vm.home),
+                        const SizedBox(height: 20),
+                        _buildImpactSection(),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -50,9 +162,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // ── Greeting ────────────────────────────────────────────────────────────────
+  // ── Greeting ───────────────────────────────────────────────────────────────
 
-  Widget _buildGreeting() {
+  Widget _buildGreeting(HomeModel? hm) {
+    
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -66,9 +179,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(height: 2),
               Row(
-                children: const [
+                children:  [
                   Text(
-                    'Ahmed ',
+                    hm?.userName ?? "مؤمن"  ,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -86,68 +199,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
-        const SizedBox(width: 12),
-        // Row(
-        //   children: [
-        //     // Bell with green dot
-        //     Stack(
-        //       children: [
-        //         Container(
-        //           width: 44,
-        //           height: 44,
-        //           decoration: BoxDecoration(
-        //             color: _card,
-        //             shape: BoxShape.circle,
-        //             border: Border.all(color: _cardBorder, width: 1),
-        //           ),
-        //           child: const Icon(Icons.notifications_outlined,
-        //               color: Colors.white, size: 22),
-        //         ),
-        //         Positioned(
-        //           top: 8,
-        //           right: 8,
-        //           child: Container(
-        //             width: 9,
-        //             height: 9,
-        //             decoration: BoxDecoration(
-        //               color: _greenDark,
-        //               shape: BoxShape.circle,
-        //               border: Border.all(color: _bg, width: 1.5),
-        //             ),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //     const SizedBox(width: 10),
-        //     // Avatar
-        //     Container(
-        //       width: 44,
-        //       height: 44,
-        //       decoration: BoxDecoration(
-        //         shape: BoxShape.circle,
-        //         border: Border.all(color: _cardBorder, width: 2),
-        //         gradient: const LinearGradient(
-        //           colors: [Color(0xFF374151), Color(0xFF1F2937)],
-        //           begin: Alignment.topLeft,
-        //           end: Alignment.bottomRight,
-        //         ),
-        //       ),
-        //       child: ClipOval(
-        //         child: Container(
-        //           color: const Color(0xFF1F2937),
-        //           child: const Icon(Icons.person, color: Color(0xFF9CA3AF), size: 26),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }
 
-  // ── Today's Check-In Card ───────────────────────────────────────────────────
+  // ── Today's Check-In Summary Card ─────────────────────────────────────────
 
-  Widget _buildCheckInCard() {
+  Widget _buildCheckInSummaryCard(HomeModel? hm) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -190,8 +248,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: const Color(0xFF1E2E22),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'May 12, 2025',
+                child:  Text(
+                  DateTime.now().toString(), //TODO:Change this to proper date format
                   style: TextStyle(
                     color: Color(0xFF9CA3AF),
                     fontSize: 12,
@@ -201,19 +259,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           const Text(
-            'Every day counts. Small steps, big reward.',
+            'Your progress across all circles today.',
             style: TextStyle(color: Color(0xFF6B7280), fontSize: 13),
           ),
           const SizedBox(height: 16),
 
-          // Two check-in tiles
-          Column(
+          // Summary stat tiles
+          Row(
             children: [
-              _buildCheckTile(isRead: true),
-              const SizedBox(height: 12),
-              _buildCheckTile(isRead: false),
+              Expanded(
+                child: _summaryStatTile(
+                  // value: '$_circlesDone/${_circles.length}',
+                  value: '${completedCircleCount.toString()}/4',
+                  label: 'Circles\ncompleted',
+                  valueColor: _greenDark,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _summaryStatTile(
+                  // value: '$_tasksDone',
+                  value: taskDoneToday.toString(),
+                  label: 'Tasks done\ntoday',
+                  valueColor: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _summaryStatTile(
+                  // value: '$_pendingCircles',
+                  value: circlePending.toString(),
+                  label: 'Circles\npending',
+                  valueColor: 4 > 0 ? _amber : _greenDark,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 14),
@@ -227,8 +308,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+              children:  [
+                Text(
                   '\u201C\u201C',
                   style: TextStyle(
                     color: Color(0xFF4B5563),
@@ -237,13 +318,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 10),
-                const Expanded(
+                SizedBox(width: 10),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '"Indeed, this Qur\'an guides to that which is most upright."',
+                        hm?.dailyQuote ?? 'Random Quote', //TODO: Add some default quote
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 13,
@@ -252,7 +333,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '– Surah Al-Isra (17:9)',
+                        hm?.dailyQuote ?? '-Surah', //TODO: Add surah name 
                         style: TextStyle(
                           color: _greenDark,
                           fontSize: 12,
@@ -270,242 +351,399 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildCheckTile({required bool isRead}) {
-    final bg = isRead ? const Color.fromARGB(32, 17, 133, 58) : const Color.fromARGB(205, 18, 124, 55);
-    final borderColor = isRead ? const Color.fromARGB(204, 17, 133, 58) : const Color(0xFFD4A96A);
-    final iconBg = isRead ? const Color(0xFFE8F5EE) : const Color(0xFFFFF8ED);
-    final iconColor = isRead ? const Color(0xFF166534) : _amber;
-    final label = isRead ? 'I Read Today' : 'I Reflected Today';
-
-    return GestureDetector(
-      onTap: () => setState(
-        () => isRead
-            ? _readToday = !_readToday
-            : _reflectedToday = !_reflectedToday,
+  Widget _summaryStatTile({
+    required String value,
+    required String label,
+    required Color valueColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F1812),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: borderColor)
-        ),
-        child: Row(
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: valueColor,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF6B7280),
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Circles Section ────────────────────────────────────────────────────────
+
+  Widget _buildCirclesSection(HomeModel? hm) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section header
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: iconBg,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    isRead ? Icons.menu_book_rounded : Icons.edit_note_rounded,
-                    color: iconColor,
-                    size: 20,
-                  ),
-                ),
-
-                const SizedBox(width: 12),
+              children: const [
+                Icon(Icons.people_outline, color: Color(0xFF9CA3AF), size: 18),
+                SizedBox(width: 8),
                 Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  'YOUR CIRCLES',
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
                   ),
                 ),
               ],
             ),
-
-            const SizedBox(height: 4),
-            Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: isRead ? _greenDark : _amber,
-                shape: BoxShape.circle,
+            GestureDetector(
+              onTap: () {},
+              child: Row(
+                children: const [
+                  Text(
+                    'Manage',
+                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                  ),
+                  SizedBox(width: 2),
+                  Icon(Icons.chevron_right, color: Color(0xFF9CA3AF), size: 18),
+                ],
               ),
-              child: const Icon(Icons.check, color: Colors.white, size: 13),
             ),
+          ],
+        ),
+        const SizedBox(height: 12),
+
+        // Circle accordion rows
+        ...hm!.circleList.map((circles)=>_buildCircleAccordion(circles)),
+       // ..._circles.map((circle) => _buildCircleAccordion(circle)),
+      ],
+    );
+  }
+
+  Widget _buildCircleAccordion(CircleModel circle) {
+    final completedMembers = int.parse(circle.completedMembers);
+    final isFullyDone =
+        completedMembers == circle.memberCount;
+    final completionColor = isFullyDone
+        ? _greenDark
+        : !isFullyDone //TODO:FIX THIS 
+        ? _amber
+        : const Color(0xFF6B7280);
+
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: _card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isExpanded ? _greenDark : _cardBorder,
+          //color: _cardBorder,
+          width: 1,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          children: [
+            // ── Collapsed summary row ──
+            GestureDetector(
+              onTap: () =>
+                  setState(() => isExpanded = !isExpanded),
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(13),
+                child: Row(
+                  children: [
+                    // Emoji avatar
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isExpanded
+                              ? _greenDark
+                              : const Color(0xFF374151),
+                          width: 2,
+                        ),
+                        color: const Color(0xFF0F1812),
+                      ),
+                      child: Center(
+                        child: Text(
+                          // circle.emoji,
+                          'Emoji',
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Name + member count
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            circle.circleName ,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${circle.memberCount} members',
+                            style: const TextStyle(
+                              color: Color(0xFF6B7280),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Streak badge
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 8,
+                    //     vertical: 4,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: const Color(0xFF1A2010),
+                    //     borderRadius: BorderRadius.circular(8),
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       const Text('🔥', style: TextStyle(fontSize: 13)),
+                    //       const SizedBox(width: 3),
+                    //       Text(
+                    //         '${circle.}',
+                    //         style: const TextStyle(
+                    //           color: Colors.white,
+                    //           fontSize: 12,
+                    //           fontWeight: FontWeight.w700,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    const SizedBox(width: 8),
+                    // Completion pill
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: completionColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${circle.completedMembers}/${circle.memberCount} done',
+                        style: TextStyle(
+                          color: completionColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    // Chevron
+                    AnimatedRotation(
+                      turns: isExpanded ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 200),
+                      child: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Color(0xFF4B5563),
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // ── Expanded body ──
+            if (isExpanded) ...[
+              Container(height: 1, color: _cardBorder),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Check-in tiles
+                    _buildCheckTile(
+                      isRead: true,
+                     // isChecked: circle.readToday,
+                     isChecked: readToday,
+                      onTap: () =>
+                          setState(() => readToday = !readToday),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildCheckTile(
+                      isRead: false,
+                      isChecked: reflectedToday,
+                      onTap: () => setState(
+                        () => reflectedToday = !reflectedToday,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Today's progress label
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Today's Progress",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '${circle.completedMembers} / ${circle.memberCount} members',
+                          style: const TextStyle(
+                            color: Color(0xFF6B7280),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Member avatars
+                    // Row(
+                    //   children: circle.memberCount
+                    //       .map(
+                    //         (m) => Padding(
+                    //           padding: const EdgeInsets.only(right: 8),
+                    //           child: _memberAvatar(
+                    //             emoji: m.emoji,
+                    //             done: m.completedToday,
+                    //             isUnknown: m.emoji.isEmpty,
+                    //           ),
+                    //         ),
+                    //       )
+                    //       .toList(),
+                    // ),
+                    const SizedBox(height: 12),
+
+                    // Progress bar
+                    // ClipRRect(
+                    //   borderRadius: BorderRadius.circular(6),
+                    //   child: LinearProgressIndicator(
+                    //     value: circle.members.isEmpty
+                    //         ? 0
+                    //         : circle.completedMembers / circle.members.length,
+                    //     backgroundColor: const Color(0xFF1E2E22),
+                    //     valueColor: AlwaysStoppedAnimation<Color>(
+                    //       isFullyDone ? _greenDark : _amber,
+                    //     ),
+                    //     minHeight: 7,
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  // ── Your Circle Card ────────────────────────────────────────────────────────
+  Widget _buildCheckTile({
+    required bool isRead,
+    required bool isChecked,
+    required VoidCallback onTap,
+  }) {
+    final bg = isRead
+        ? const Color.fromARGB(32, 17, 133, 58)
+        : const Color.fromARGB(30, 217, 119, 6);
+    final borderColor = isRead
+        ? const Color.fromARGB(204, 17, 133, 58)
+        : const Color(0xFFD4A96A);
+    final iconBg = isRead ? const Color(0xFFE8F5EE) : const Color(0xFFFFF8ED);
+    final iconColor = isRead ? const Color(0xFF166534) : _amber;
+    final checkColor = isRead ? _greenDark : _amber;
+    final label = isRead ? 'I Read Today' : 'I Reflected Today';
 
-  Widget _buildCircleCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _card,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _cardBorder, width: 1),
-      ),
-      child: Column(
-        children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: const [
-                  Icon(
-                    Icons.people_outline,
-                    color: Color(0xFF9CA3AF),
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isChecked ? bg : const Color(0xFF0F1812),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isChecked ? borderColor : const Color(0xFF2A3830),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: isChecked ? iconBg : const Color(0xFF1A2520),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    isRead ? Icons.menu_book_rounded : Icons.edit_note_rounded,
+                    color: isChecked ? iconColor : const Color(0xFF4B5563),
                     size: 18,
                   ),
-                  SizedBox(width: 8),
-                  Text(
-                    'YOUR CIRCLE',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.8,
-                    ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: isChecked ? Colors.white : const Color(0xFF6B7280),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
                   ),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Row(
-                  children: const [
-                    Text(
-                      'View Circle',
-                      style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
-                    ),
-                    SizedBox(width: 2),
-                    Icon(
-                      Icons.chevron_right,
-                      color: Color(0xFF9CA3AF),
-                      size: 18,
-                    ),
-                  ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Circle info row
-          Row(
-            children: [
-              // Lantern avatar
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: _greenDark, width: 2),
-                  color: const Color(0xFF0F1812),
-                ),
-                child: const Center(
-                  child: Text('🪔', style: TextStyle(fontSize: 26)),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Circle نور',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      '5 members',
-                      style: TextStyle(color: Color(0xFF6B7280), fontSize: 13),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Row(
-                    children: [
-                      Text('🔥', style: TextStyle(fontSize: 22)),
-                      SizedBox(width: 4),
-                      Text(
-                        '12',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Day Streak',
-                    style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-
-          // Today's Progress
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "Today's Progress",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                '4 / 5 completed',
-                style: TextStyle(color: Color(0xFF6B7280), fontSize: 12),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          // Member avatars
-          Row(
-            children: [
-              _memberAvatar(emoji: '🧕', done: true),
-              const SizedBox(width: 8),
-              _memberAvatar(emoji: '🧔', done: true),
-              const SizedBox(width: 8),
-              _memberAvatar(emoji: '🧑', done: true),
-              const SizedBox(width: 8),
-              _memberAvatar(emoji: '🌸', done: true),
-              const SizedBox(width: 8),
-              _memberAvatar(isUnknown: true),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          // Progress bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: 4 / 5,
-              backgroundColor: const Color(0xFF1E2E22),
-              valueColor: const AlwaysStoppedAnimation<Color>(_greenDark),
-              minHeight: 7,
+              ],
             ),
-          ),
-        ],
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                color: isChecked ? checkColor : Colors.transparent,
+                shape: BoxShape.circle,
+                border: isChecked
+                    ? null
+                    : Border.all(color: const Color(0xFF374151), width: 2),
+              ),
+              child: isChecked
+                  ? const Icon(Icons.check, color: Colors.white, size: 13)
+                  : null,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -516,12 +754,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     bool isUnknown = false,
   }) {
     return Container(
-      width: 46,
-      height: 46,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isUnknown ? const Color(0xFF374151) : _greenDark,
+          color: isUnknown
+              ? const Color(0xFF374151)
+              : done
+              ? _greenDark
+              : const Color(0xFF374151),
           width: isUnknown ? 1.5 : 2,
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
@@ -532,16 +774,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ? const Icon(
                 Icons.question_mark_rounded,
                 color: Color(0xFF6B7280),
-                size: 20,
+                size: 18,
               )
-            : Text(emoji!, style: const TextStyle(fontSize: 22)),
+            : Text(emoji!, style: const TextStyle(fontSize: 20)),
       ),
     );
   }
 
-  // ── Your Impact ─────────────────────────────────────────────────────────────
+  // ── Your Impact ────────────────────────────────────────────────────────────
 
   Widget _buildImpactSection() {
+    // Aggregate across all circles
+    final totalVerses = 23;
+    // final totalReflections = _circles.fold(
+    //   0,
+    //   (sum, c) => sum + (c.reflectedToday ? 1 : 0),
+    // );
+    // final totalCheckins = _circles.fold(
+    //   0,
+    //   (sum, c) => sum + (c.readToday ? 1 : 0) + (c.reflectedToday ? 1 : 0),
+    // );
+    // final consistencyPct = ((_circlesDone / _circles.length) * 100).round();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -567,7 +821,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: _impactTile(
                 icon: Icons.menu_book_rounded,
                 iconColor: _greenDark,
-                value: '23',
+                value: '$totalVerses',
                 label: 'Verses Read\nThis Week',
               ),
             ),
@@ -594,7 +848,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: _impactTile(
                 icon: Icons.trending_up_rounded,
                 iconColor: _greenDark,
-                value: '85%',
+                // value: '$consistencyPct%',
+                value: '',
                 label: 'Consistency\nThis Week',
               ),
             ),
@@ -644,7 +899,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // ── Bottom Nav ───────────────────────────────────────────────────────────────
+  // ── Bottom Nav ─────────────────────────────────────────────────────────────
 
   Widget _buildNavBar() {
     final items = [

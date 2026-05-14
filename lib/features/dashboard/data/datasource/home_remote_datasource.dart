@@ -1,16 +1,18 @@
 import 'package:circle_of_light/core/api/app_api.dart';
+import 'package:circle_of_light/core/storage/token_storage_service.dart';
 import 'package:circle_of_light/features/dashboard/data/model/home_model.dart';
 import 'package:dio/dio.dart';
 
 class HomeRemoteDatasource {
   final Dio dio;
-  HomeRemoteDatasource(this.dio);
+final TokenStorageService tokenStorage;
+  HomeRemoteDatasource(this.dio,this.tokenStorage);
 
-  Future<HomeModel> getHomeDetails({
-    required String accessToken
-  })async{
+
+  Future<HomeModel> getHomeDetails()async{
     try{
-      final response = await dio.get(homeDetailsEndpoint,options: Options(headers:{"Authorization": "Bearer $accessToken"}));
+      final token = await tokenStorage.getAccessToken();
+      final response = await dio.get(homeDetailsEndpoint,options: Options(headers:{"Authorization": "Bearer $token"}));
       if(response.data == null){
         throw Exception("Something went wrong");
       }

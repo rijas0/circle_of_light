@@ -18,8 +18,6 @@ class CircleAccessDatasource {
   }) async {
     try {
       final token = await tokenStorage.getAccessToken();
-      log('circle_create token present: ${token?.isNotEmpty == true}');
-      log('circle_create token value: |${token ?? "null"}|');
       final response = await dio.post(
         circleCreationEndpoint,
         data: {
@@ -34,8 +32,7 @@ class CircleAccessDatasource {
       if (response.data == null) {
         throw Exception("User cancelled login");
       }
-      log('response ${response.data}');
-      log('statusCode ${response.statusCode}');
+      
        return CircleAccessModel.fromJson(response.data['circle']);
     } catch (e) {
       throw Exception("Failed to create circle: $e");
