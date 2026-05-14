@@ -1,9 +1,6 @@
-import 'dart:ffi';
 
-import 'package:circle_of_light/features/circles/data/models/circle_model.dart';
 import 'package:circle_of_light/features/dashboard/data/model/home_model.dart';
 import 'package:circle_of_light/features/dashboard/presentation/provider/provider.dart';
-import 'package:circle_of_light/features/dashboard/presentation/viewmodel/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,40 +13,40 @@ const _greenDark = Color(0xFF22C55E);
 const _greenDeep = Color(0xFF166534);
 const _amber = Color(0xFFD97706);
 
-// ── Data Model ────────────────────────────────────────────────────────────────
 
-// class CircleMember {
-//   final String emoji;
-//   final bool completedToday;
-//   const CircleMember({required this.emoji, this.completedToday = false});
-// }
 
-// class QuranCircle {
-//   final String id;
-//   final String name;
-//   final String emoji;
-//   final int streak;
-//   final List<CircleMember> members;
-//   bool readToday;
-//   bool reflectedToday;
-//   bool isExpanded;
+class CircleMember {
+  final String emoji;
+  final bool completedToday;
+  const CircleMember({required this.emoji, this.completedToday = false});
+}
 
-//   QuranCircle({
-//     required this.id,
-//     required this.name,
-//     required this.emoji,
-//     required this.streak,
-//     required this.members,
-//     this.readToday = false,
-//     this.reflectedToday = false,
-//     this.isExpanded = false,
-//   });
+class QuranCircle {
+  final String id;
+  final String name;
+  final String emoji;
+  final int streak;
+  final List<CircleMember> members;
+  bool readToday;
+  bool reflectedToday;
+  bool isExpanded;
 
-//   int get completedMembers => members.where((m) => m.completedToday).length;
-//   bool get isFullyDone => readToday && reflectedToday;
-// }
+  QuranCircle({
+    required this.id,
+    required this.name,
+    required this.emoji,
+    required this.streak,
+    required this.members,
+    this.readToday = false,
+    this.reflectedToday = false,
+    this.isExpanded = false,
+  });
 
-// ── Screen ────────────────────────────────────────────────────────────────────
+  int get completedMembers => members.where((m) => m.completedToday).length;
+  bool get isFullyDone => readToday && reflectedToday;
+}
+
+// ── Screen 
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -63,53 +60,50 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int completedCircleCount = 3;
   int taskDoneToday = 3;
   int circlePending = 4;
-  bool isExpanded = false;
-  bool readToday = false;
-  bool reflectedToday = false;
 
-  // final List<QuranCircle> _circles = [
-  //   QuranCircle(
-  //     id: '1',
-  //     name: 'Circle نور',
-  //     emoji: '🪔',
-  //     streak: 12,
-  //     readToday: true,
-  //     reflectedToday: true,
-  //     isExpanded: true,
-  //     members: const [
-  //       CircleMember(emoji: '🧕', completedToday: true),
-  //       CircleMember(emoji: '🧔', completedToday: true),
-  //       CircleMember(emoji: '🧑', completedToday: true),
-  //       CircleMember(emoji: '🌸', completedToday: true),
-  //       CircleMember(emoji: ''),
-  //     ],
-  //   ),
-  //   QuranCircle(
-  //     id: '2',
-  //     name: 'Circle Badr',
-  //     emoji: '🌙',
-  //     streak: 7,
-  //     readToday: true,
-  //     reflectedToday: true,
-  //     members: const [
-  //       CircleMember(emoji: '🌿', completedToday: true),
-  //       CircleMember(emoji: '⭐', completedToday: true),
-  //       CircleMember(emoji: '🦋', completedToday: true),
-  //       CircleMember(emoji: '🕊️', completedToday: true),
-  //     ],
-  //   ),
-  //   QuranCircle(
-  //     id: '3',
-  //     name: 'Circle Safa',
-  //     emoji: '🌿',
-  //     streak: 3,
-  //     members: const [
-  //       CircleMember(emoji: '🌺', completedToday: true),
-  //       CircleMember(emoji: ''),
-  //       CircleMember(emoji: ''),
-  //     ],
-  //   ),
-  // ];
+  final List<QuranCircle> _circles = [
+    QuranCircle(
+      id: '1',
+      name: 'Circle نور',
+      emoji: '🪔',
+      streak: 12,
+      readToday: true,
+      reflectedToday: true,
+      isExpanded: true,
+      members: const [
+        CircleMember(emoji: '🧕', completedToday: true),
+        CircleMember(emoji: '🧔', completedToday: true),
+        CircleMember(emoji: '🧑', completedToday: true),
+        CircleMember(emoji: '🌸', completedToday: true),
+        CircleMember(emoji: ''),
+      ],
+    ),
+    QuranCircle(
+      id: '2',
+      name: 'Circle Badr',
+      emoji: '🌙',
+      streak: 7,
+      readToday: true,
+      reflectedToday: true,
+      members: const [
+        CircleMember(emoji: '🌿', completedToday: true),
+        CircleMember(emoji: '⭐', completedToday: true),
+        CircleMember(emoji: '🦋', completedToday: true),
+        CircleMember(emoji: '🕊️', completedToday: true),
+      ],
+    ),
+    QuranCircle(
+      id: '3',
+      name: 'Circle Safa',
+      emoji: '🌿',
+      streak: 3,
+      members: const [
+        CircleMember(emoji: '🌺', completedToday: true),
+        CircleMember(emoji: ''),
+        CircleMember(emoji: ''),
+      ],
+    ),
+  ];
 
   // ── Computed ─────────────────────────────────────────────────────────────
 
@@ -430,22 +424,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         const SizedBox(height: 12),
 
         // Circle accordion rows
-        ...hm!.circleList.map((circles)=>_buildCircleAccordion(circles)),
-       // ..._circles.map((circle) => _buildCircleAccordion(circle)),
+        // if (hm.circleList) ...hm.circleList.map((circles)=>_buildCircleAccordion(circles)),
+        ..._circles.map((circle) => _buildCircleAccordion(circle)),
       ],
     );
   }
 
-  Widget _buildCircleAccordion(CircleModel circle) {
-    final completedMembers = int.parse(circle.completedMembers);
-    final isFullyDone =
-        completedMembers == circle.memberCount;
-    final completionColor = isFullyDone
-        ? _greenDark
-        : !isFullyDone //TODO:FIX THIS 
-        ? _amber
-        : const Color(0xFF6B7280);
-
+  Widget _buildCircleAccordion(QuranCircle circle) {
+    final isFullyDone = circle.completedMembers == circle.members.length;
+    final completionColor = isFullyDone ? _greenDark : _amber;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -454,8 +441,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         color: _card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isExpanded ? _greenDark : _cardBorder,
-          //color: _cardBorder,
+          color: circle.isExpanded ? _greenDark : _cardBorder,
           width: 1,
         ),
       ),
@@ -466,7 +452,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             // ── Collapsed summary row ──
             GestureDetector(
               onTap: () =>
-                  setState(() => isExpanded = !isExpanded),
+                  setState(() => circle.isExpanded = !circle.isExpanded),
               child: Container(
                 color: Colors.transparent,
                 padding: const EdgeInsets.all(13),
@@ -479,7 +465,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: isExpanded
+                          color: circle.isExpanded
                               ? _greenDark
                               : const Color(0xFF374151),
                           width: 2,
@@ -488,8 +474,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          // circle.emoji,
-                          'Emoji',
+                          circle.emoji,
                           style: const TextStyle(fontSize: 20),
                         ),
                       ),
@@ -501,7 +486,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            circle.circleName ,
+                           circle.name,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -510,7 +495,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '${circle.memberCount} members',
+                            '${circle.members.length} members',
                             style: const TextStyle(
                               color: Color(0xFF6B7280),
                               fontSize: 11,
@@ -556,7 +541,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        '${circle.completedMembers}/${circle.memberCount} done',
+                        '${circle.completedMembers}/${circle.members.length} done',
                         style: TextStyle(
                           color: completionColor,
                           fontSize: 11,
@@ -567,7 +552,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const SizedBox(width: 6),
                     // Chevron
                     AnimatedRotation(
-                      turns: isExpanded ? 0.5 : 0,
+                      turns: circle.isExpanded ? 0.5 : 0,
                       duration: const Duration(milliseconds: 200),
                       child: const Icon(
                         Icons.keyboard_arrow_down,
@@ -581,7 +566,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
 
             // ── Expanded body ──
-            if (isExpanded) ...[
+            if (circle.isExpanded) ...[
               Container(height: 1, color: _cardBorder),
               Padding(
                 padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
@@ -591,17 +576,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     // Check-in tiles
                     _buildCheckTile(
                       isRead: true,
-                     // isChecked: circle.readToday,
-                     isChecked: readToday,
+                      isChecked: circle.readToday,
                       onTap: () =>
-                          setState(() => readToday = !readToday),
+                          setState(() => circle.readToday = !circle.readToday),
                     ),
                     const SizedBox(height: 10),
                     _buildCheckTile(
                       isRead: false,
-                      isChecked: reflectedToday,
+                      isChecked: circle.reflectedToday,
                       onTap: () => setState(
-                        () => reflectedToday = !reflectedToday,
+                        () => circle.reflectedToday = !circle.reflectedToday,
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -619,7 +603,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                         Text(
-                          '${circle.completedMembers} / ${circle.memberCount} members',
+                          '${circle.completedMembers} / ${circle.members} members',
                           style: const TextStyle(
                             color: Color(0xFF6B7280),
                             fontSize: 12,
@@ -630,36 +614,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const SizedBox(height: 12),
 
                     // Member avatars
-                    // Row(
-                    //   children: circle.memberCount
-                    //       .map(
-                    //         (m) => Padding(
-                    //           padding: const EdgeInsets.only(right: 8),
-                    //           child: _memberAvatar(
-                    //             emoji: m.emoji,
-                    //             done: m.completedToday,
-                    //             isUnknown: m.emoji.isEmpty,
-                    //           ),
-                    //         ),
-                    //       )
-                    //       .toList(),
-                    // ),
+                    Row(
+                      children: circle.members
+                          .map(
+                            (m) => Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: _memberAvatar(
+                                emoji: m.emoji,
+                                done: m.completedToday,
+                                isUnknown: m.emoji.isEmpty,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                     const SizedBox(height: 12),
 
                     // Progress bar
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(6),
-                    //   child: LinearProgressIndicator(
-                    //     value: circle.members.isEmpty
-                    //         ? 0
-                    //         : circle.completedMembers / circle.members.length,
-                    //     backgroundColor: const Color(0xFF1E2E22),
-                    //     valueColor: AlwaysStoppedAnimation<Color>(
-                    //       isFullyDone ? _greenDark : _amber,
-                    //     ),
-                    //     minHeight: 7,
-                    //   ),
-                    // ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        value: circle.members.isEmpty
+                            ? 0
+                            : circle.completedMembers / circle.members.length,
+                        backgroundColor: const Color(0xFF1E2E22),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isFullyDone ? _greenDark : _amber,
+                        ),
+                        minHeight: 7,
+                      ),
+                    ),
                   ],
                 ),
               ),

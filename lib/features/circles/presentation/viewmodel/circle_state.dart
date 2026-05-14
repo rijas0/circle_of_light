@@ -2,15 +2,19 @@ import 'package:circle_of_light/features/circles/data/models/circle_model.dart';
 
 class CircleState {
   final bool isLoading;
-  final CircleModel? circle;
+  final List<CircleModel> circles;
   final String? error;
 
-  CircleState({this.isLoading = false, this.circle, this.error});
+  CircleState({this.isLoading = false, this.circles = const [], this.error});
 
-  CircleState copyWith({bool? isLoading, CircleModel? circle, String? error}) {
+  CircleState copyWith({
+    bool? isLoading,
+    List<CircleModel>? circles,
+    String? error,
+  }) {
     return CircleState(
       isLoading: isLoading ?? this.isLoading,
-      circle: circle ?? this.circle,
+      circles: circles ?? this.circles,
       error: error ?? this.error,
     );
   }

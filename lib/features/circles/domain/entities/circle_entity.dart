@@ -8,29 +8,28 @@ class CircleEntity {
     required this.circleName,
     required this.memberCount,
     required this.isPublic,
-    required this.inviteId,
-    required this.creatorId, 
+    required this.creatorId,
     required this.focus,
     required this.circleProgress,
     required this.membersList,
     required this.taskList,
     required this.completedMembers,
     this.avatarUrl,
-    this.circleDescription, 
-
-
+    this.circleDescription,
+    this.inviteCode,
   });
+
   final String circleId;
   final String circleName;
   final String? circleDescription;
   final String? avatarUrl;
   final int memberCount;
-  final int creatorId;
-  final int inviteId;
+  final String creatorId;
+  final String? inviteCode;
   final String focus;
   final bool isPublic;
   final String completedMembers;
-  final List<CircleMemberModel>membersList;
+  final List<CircleMemberModel> membersList;
   final List<CircleTaskModel> taskList;
   final CircleProgressModel circleProgress;
 }

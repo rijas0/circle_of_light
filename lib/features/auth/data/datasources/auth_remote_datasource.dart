@@ -3,13 +3,16 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 
+import '../../../../core/api/app_api.dart';
+import '../../../../core/storage/token_storage_service.dart';
 import '../model/user_model.dart';
 
 class AuthRemoteDataSource {
   final Dio dio;
   final FlutterAppAuth appAuth;
+  final TokenStorageService tokenStorage;
 
-  AuthRemoteDataSource(this.dio, this.appAuth);
+  AuthRemoteDataSource(this.dio, this.appAuth, this.tokenStorage);
 
   Future<UserModel> loginWithQuran() async {
     const clientId = "b90f5393-b76b-41dd-bdd8-b7c738536464";
@@ -64,5 +67,15 @@ class AuthRemoteDataSource {
   Future<UserModel> exchangeCode(String code) async {
     final res = await dio.post("SUPABASE_FUNCTION", data: {"code": code});
     return UserModel.fromJson(res.data);
+  }
+
+  Future<void> logout() async {
+    final accessToken = await tokenStorage.getAccessToken();
+    await dio.post(
+      logoutEndpoint,
+      options: Options(headers: {
+        'Authorization': 'Bearer $accessToken',
+      }),
+    );
   }
 }

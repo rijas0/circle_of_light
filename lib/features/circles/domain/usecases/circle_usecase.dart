@@ -6,7 +6,7 @@ class CircleUseCase {
 
   CircleUseCase(this.repository);
 
-  Future<CircleModel>call({required String accessToken}){
-    return repository.getCircleDetails(accessToken: accessToken);
+  Future<List<CircleModel>> call() {
+    return repository.getCircleDetails();
   }
 }

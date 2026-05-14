@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:circle_of_light/core/storage/token_storage_service.dart';
 import 'package:circle_of_light/features/auth/domain/entities/auth_result.dart';
 import 'package:circle_of_light/features/auth/domain/entities/user_entitie.dart';
+import 'package:circle_of_light/features/auth/domain/repositories/auth_repository.dart';
 import 'package:circle_of_light/features/auth/domain/usecases/check_user_room_usecase.dart';
 import 'package:circle_of_light/features/auth/domain/usecases/login_with_quran_usercase.dart';
 
@@ -14,9 +15,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final ExchangeCodeUseCase exchangeCode;
   final LoginWithQuranUseCase login;
   final CheckUserRoomUseCase checkRoom;
+  final AuthRepository authRepo;
   final TokenStorageService tokenStorage;
 
-  AuthNotifier(this.exchangeCode, this.login, this.checkRoom, this.tokenStorage)
+  AuthNotifier(this.exchangeCode, this.login, this.checkRoom, this.authRepo, this.tokenStorage)
       : super(AuthState());
 
   Future<void> handleAuthCode(String code) async {
@@ -97,6 +99,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    try {
+      await authRepo.logout();
+    } catch (e) {
+      log('Logout API call failed (continuing with local clear): $e');
+    }
     await tokenStorage.clearTokens();
     state = AuthState(isInitializing: false);
   }
