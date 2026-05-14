@@ -22,6 +22,7 @@ class CirclesScreen extends StatelessWidget {
       focus: '', 
       circleProgress: CircleProgressModel(completedMembersCount: '', completedTaskCount: '', overallPercentage: '', totalTaskCount: ''),
        membersList: [], 
+       completedMembers: '4',
        taskList: [],
     ),
     CircleModel(
@@ -36,6 +37,7 @@ class CirclesScreen extends StatelessWidget {
       focus: '',
       taskList: [],
       membersList: [],
+      completedMembers: '4',
       circleProgress: CircleProgressModel(completedMembersCount: '', completedTaskCount:'', overallPercentage: '', totalTaskCount:'')
     ),
     CircleModel(
@@ -50,6 +52,7 @@ class CirclesScreen extends StatelessWidget {
       membersList: [],
       focus: '',
       taskList: [],
+      completedMembers: '4',
       circleProgress: CircleProgressModel(completedMembersCount: '', completedTaskCount:'', overallPercentage:'', totalTaskCount:'')
     ),
   ];

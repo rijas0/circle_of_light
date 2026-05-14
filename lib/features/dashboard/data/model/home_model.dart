@@ -1,4 +1,4 @@
-import 'package:circle_of_light/features/dashboard/data/model/circle_task_model.dart';
+import 'package:circle_of_light/features/circles/data/models/circle_model.dart';
 import 'package:circle_of_light/features/dashboard/domain/entity/home_entity.dart';
 
 class HomeModel extends HomeEntity {
@@ -15,7 +15,7 @@ class HomeModel extends HomeEntity {
     required super.reflectionTW,
     required super.totalCheckInTw,
     required super.consistencyTW,
-    required super.taskList,
+    required super.circleList
   });
 
   factory HomeModel.fromJSON(Map<String, dynamic> json) {
@@ -32,11 +32,11 @@ class HomeModel extends HomeEntity {
       reflectionTW: json['reflectionTW'],
       totalCheckInTw: json['totalCheckInTw'],
       consistencyTW: json['consistencyTW'],
-      taskList:
-          (json['circleTasks'] as List<dynamic>?)
+      circleList:
+          (json['circleList'] as List<dynamic>?)
               ?.map(
                 (task) =>
-                    CircleTaskModel.fromJSON(task as Map<String, dynamic>),
+                    CircleModel.fromJSON(task as Map<String, dynamic>),
               )
               .toList() ??
           [], // this should be return list of daily task in a circle
@@ -57,7 +57,7 @@ class HomeModel extends HomeEntity {
       'reflectionTW': reflectionTW,
       'totalCheckInTw': totalCheckInTw,
       'consistencyTW': consistencyTW,
-      'circleTasks': taskList.map((task)=>task.toJSON()).toList(),
+      // 'circleTasks': taskList.map((task)=>task.toJSON()).toList(),
     };
   }
 }

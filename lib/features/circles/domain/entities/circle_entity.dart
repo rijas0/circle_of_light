@@ -14,6 +14,7 @@ class CircleEntity {
     required this.circleProgress,
     required this.membersList,
     required this.taskList,
+    required this.completedMembers,
     this.avatarUrl,
     this.circleDescription, 
 
@@ -28,6 +29,7 @@ class CircleEntity {
   final int inviteId;
   final String focus;
   final bool isPublic;
+  final String completedMembers;
   final List<CircleMemberModel>membersList;
   final List<CircleTaskModel> taskList;
   final CircleProgressModel circleProgress;

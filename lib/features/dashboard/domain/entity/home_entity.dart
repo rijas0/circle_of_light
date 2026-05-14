@@ -1,4 +1,5 @@
-import "../../data/model/circle_task_model.dart";
+import "../../../circles/data/models/circle_model.dart";
+
 
 class HomeEntity {
   final String userName;
@@ -13,7 +14,7 @@ class HomeEntity {
   final String reflectionTW;
   final String totalCheckInTw;
   final String consistencyTW;
-  final List<CircleTaskModel> taskList;
+  final List<CircleModel> circleList;
 
   HomeEntity({
     required this.userName,
@@ -28,6 +29,6 @@ class HomeEntity {
     required this.reflectionTW,
     required this.totalCheckInTw,
     required this.consistencyTW,
-    required this.taskList
+    required this.circleList,
   });
 }

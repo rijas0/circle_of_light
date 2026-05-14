@@ -17,6 +17,7 @@ class CircleModel extends CircleEntity {
     required super.membersList,
     required super.taskList,
     super.circleDescription,
+    required super.completedMembers,
     super.avatarUrl,
   });
 
@@ -31,6 +32,7 @@ class CircleModel extends CircleEntity {
       focus: json['focus'] ?? '',
       circleDescription: json['description'],
       avatarUrl: json['avatar_url'],
+      completedMembers: json['completed_members'],
       membersList:
           (json['circleMemberList'] as List<dynamic>?)
               ?.map((members) => CircleMemberModel.fromJSON(members))

@@ -6,7 +6,7 @@ class HomeUseCase {
 
   HomeUseCase(this.repository);
 
-  Future<HomeModel> call({required String accessToken}){
-    return repository.getHomeDetails(accessToken: accessToken);
+  Future<HomeModel> call(){
+    return repository.getHomeDetails();
   }
 }
