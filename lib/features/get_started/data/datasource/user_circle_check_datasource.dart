@@ -1,17 +1,19 @@
+import 'dart:developer';
+
 import '../../../../core/storage/token_storage_service.dart';
 import '../model/user_circle_check_model.dart';
 import 'package:dio/dio.dart';
 
 import '../../../../core/api/app_api.dart';
 
-class UserCircleStatus {
+class UserCircleCheckDatasource {
   final Dio dio;
   final TokenStorageService tokenService;
-  UserCircleStatus(this.dio, this.tokenService);
+  UserCircleCheckDatasource(this.dio, this.tokenService);
 
   Future<UserCircleCheckModel> checkUserHasCircle() async {
     try {
-      final token = tokenService.getAccessToken();
+      final token = await tokenService.getAccessToken();
       final response = await dio.get(
         checkUserHasCircles,
         options: Options(headers: {"Authorization": "Bearer $token"}),
@@ -21,6 +23,7 @@ class UserCircleStatus {
       }
       return UserCircleCheckModel.fromJSON(response.data);
     } catch (e) {
+      log('Something error ${e.toString()}');
       throw Exception("Failed to Check user circle Details circle: $e");
     }
   }

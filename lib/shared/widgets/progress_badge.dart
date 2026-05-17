@@ -32,6 +32,7 @@ class ProgressBadge extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: foregroundColor,
               fontWeight: FontWeight.w600,
+              fontSize: 12
             ),
           ),
         ],

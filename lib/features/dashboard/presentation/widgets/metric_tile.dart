@@ -12,6 +12,7 @@ class MetricTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      onTap: (){},
       padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

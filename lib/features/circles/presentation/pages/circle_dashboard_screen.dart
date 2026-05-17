@@ -1,49 +1,98 @@
-import 'dart:math';
 
+import 'dart:developer';
+import 'dart:math' hide log;
+
+import 'package:circle_of_light/core/api/app_api.dart';
+import 'package:circle_of_light/features/circles/data/models/circle_details_model.dart';
+import 'package:circle_of_light/features/circles/data/models/circle_member_model.dart';
+import 'package:circle_of_light/features/circles/domain/entities/circle_task_entity.dart';
+import 'package:circle_of_light/features/circles/presentation/provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'circle_details_screen.dart';
+import '../widgets/add_task.dart';
 
-class CircleDashboard extends StatefulWidget {
-  const CircleDashboard({super.key});
+class CircleDashboard extends ConsumerStatefulWidget {
+  const CircleDashboard({super.key, required this.circleId});
+
+  final String circleId;
 
   @override
-  State<CircleDashboard> createState() => _CircleDashboardState();
+  ConsumerState<CircleDashboard> createState() => _CircleDashboardState();
 }
 
-class _CircleDashboardState extends State<CircleDashboard> {
-  int _selectedNavIndex = 1;
-
-  final List<_Member> members = const [
-    _Member('Ahmed', 'Completed', 12, true),
-    _Member('Fatima', 'Completed', 9, true),
-    _Member('Zaid', 'Pending', 6, false),
-    _Member('Yusuf', 'Completed', 11, true),
-    _Member('Ali', 'Pending', 5, false),
-    _Member('Maryam', 'Pending', 7, false),
-  ];
-
-  final List<_Task> tasks = const [
-    _Task('Read Surah Yaseen', 5, 8, Icons.menu_book_rounded, Color(0xFF1B4332)),
-    _Task('Reflect on Ayah 10', 6, 8, Icons.edit_note_rounded, Color(0xFF1A237E)),
-    _Task('Listen to Tafsir', 6, 8, Icons.headphones_rounded, Color(0xFF4E342E)),
-  ];
+class _CircleDashboardState extends ConsumerState<CircleDashboard> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref
+          .read(circleDetailsNotifierProvider.notifier)
+          .fetchCircleDetails(circleId: widget.circleId),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final vm = ref.watch(circleDetailsNotifierProvider);
+    final details = vm.circleDetails;
+    final userId = details?.userId ?? '0';
+    final creatorId = details?.creatorId;
+    final isUserAdmin = userId == creatorId;
+
+    if (vm.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (vm.error != null) {
+
+      return Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                const SizedBox(height: 16),
+                Text(
+                  vm.error!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () => ref
+                      .read(circleDetailsNotifierProvider.notifier)
+                      .fetchCircleDetails(circleId: widget.circleId),
+                  icon: const Icon(Icons.refresh, size: 18),
+                  label: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+
+    if (details == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       body: Stack(
         children: [
-          // Background gradient
           Container(
             decoration: const BoxDecoration(
               gradient: RadialGradient(
                 center: Alignment(0, -0.6),
                 radius: 0.8,
-                colors: [
-                  Color(0xFF0D2B15),
-                  Color(0xFF07120A),
-                ],
+                colors: [Color(0xFF0D2B15), Color(0xFF07120A)],
               ),
             ),
           ),
@@ -58,13 +107,13 @@ class _CircleDashboardState extends State<CircleDashboard> {
                       children: [
                         _buildTopBar(),
                         const SizedBox(height: 16),
-                        _buildHeader(),
+                        _buildHeader(details),
                         const SizedBox(height: 20),
-                        _buildProgressCard(),
+                        _buildProgressCard(details),
                         const SizedBox(height: 20),
-                        _buildTodaysTasks(),
+                        _buildTodaysTasks(details),
                         const SizedBox(height: 20),
-                        _buildMembersSection(),
+                        _buildMembersSection(details),
                         const SizedBox(height: 100),
                       ],
                     ),
@@ -73,13 +122,13 @@ class _CircleDashboardState extends State<CircleDashboard> {
               ],
             ),
           ),
-          // Bottom bar + buttons
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomSection(),
-          ),
+          isUserAdmin ?? false ?
+            Positioned(
+              bottom: 50,
+              left: 0,
+              right: 0,
+              child: _buildBottomSection(),
+            ):SizedBox(),
         ],
       ),
     );
@@ -93,7 +142,11 @@ class _CircleDashboardState extends State<CircleDashboard> {
         children: [
           GestureDetector(
             onTap: () {},
-            child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           GestureDetector(
             onTap: () {},
@@ -104,7 +157,11 @@ class _CircleDashboardState extends State<CircleDashboard> {
                 color: const Color(0xFF112218),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.settings_outlined, color: Colors.white, size: 20),
+              child: const Icon(
+                Icons.settings_outlined,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -112,10 +169,9 @@ class _CircleDashboardState extends State<CircleDashboard> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(CircleDetailsModel circleDetails) {
     return Column(
       children: [
-        // Circular mosque image
         Stack(
           alignment: Alignment.center,
           children: [
@@ -123,7 +179,10 @@ class _CircleDashboardState extends State<CircleDashboard> {
               width: 110,
               height: 110,
               child: CustomPaint(
-                painter: _CircleProgressPainter(progress: 1.0, color: const Color(0xFF22C55E)),
+                painter: _CircleProgressPainter(
+                  progress: 1.0,
+                  color: const Color(0xFF22C55E),
+                ),
               ),
             ),
             ClipOval(
@@ -139,21 +198,8 @@ class _CircleDashboardState extends State<CircleDashboard> {
                   ),
                 ),
                 child: const Center(
-                  child: Text('🕌', style: TextStyle(fontSize: 40)),
+                  child: Text('\u{1F54C}', style: TextStyle(fontSize: 40)),
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 4,
-              right: 4,
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF22C55E),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.edit, color: Colors.white, size: 14),
               ),
             ),
           ],
@@ -162,9 +208,9 @@ class _CircleDashboardState extends State<CircleDashboard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Light Seekers',
-              style: TextStyle(
+            Text(
+              circleDetails.circleName,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -176,39 +222,28 @@ class _CircleDashboardState extends State<CircleDashboard> {
           ],
         ),
         const SizedBox(height: 8),
-        const Text(
-          '"And [remember] when hearts were joined\ntogether by Allah\'s favor."',
+        Text(
+          circleDetails.circleDescription ?? 'Circle Description',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFFB0BEC5),
-            fontSize: 13,
-            height: 1.5,
-          ),
+          style: const TextStyle(color: Color(0xFFB0BEC5), fontSize: 13, height: 1.5),
         ),
         const SizedBox(height: 4),
-        const Text(
-          '(Quran 3:103)',
-          style: TextStyle(
+        Text(
+          '${circleDetails.memberCount} Member${circleDetails.memberCount > 1 ? 's' : ''} active',
+          style: const TextStyle(
             color: Color(0xFF22C55E),
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 4),
-        ElevatedButton(
-          onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>CircleDetailsScreen())),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 166, 184, 170),
-            foregroundColor: Colors.black,
-            shape: BeveledRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
-            side: BorderSide()
-          ),
-          child: Text('Circle info'))
       ],
     );
   }
 
-  Widget _buildProgressCard() {
+  Widget _buildProgressCard(CircleDetailsModel circleDetails) {
+    final metrics = circleDetails.circleMetrics;
+    final progress = metrics.overallPercentage / 100.0;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -219,21 +254,13 @@ class _CircleDashboardState extends State<CircleDashboard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Circle Progress',
-                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: const Text(
-              //     'View all',
-              //     style: TextStyle(color: Color(0xFF22C55E), fontSize: 13),
-              //   ),
-              // ),
-            ],
+          const Text(
+            'Circle Progress',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 16),
           Row(
@@ -243,24 +270,24 @@ class _CircleDashboardState extends State<CircleDashboard> {
                 height: 90,
                 child: CustomPaint(
                   painter: _CircleProgressPainter(
-                    progress: 0.72,
+                    progress: progress.clamp(0.0, 1.0),
                     color: const Color(0xFF22C55E),
                     strokeWidth: 7,
                     showBackground: true,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '72%',
-                          style: TextStyle(
+                          '${metrics.overallPercentage}%',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Overall',
                           style: TextStyle(color: Color(0xFF6B7280), fontSize: 11),
                         ),
@@ -276,15 +303,13 @@ class _CircleDashboardState extends State<CircleDashboard> {
                     _buildStatRow(
                       Icons.book_outlined,
                       'Tasks Completed',
-                      '18 / 25',
-                      const Color(0xFF1B4332),
+                      '${metrics.completedTaskCount} / ${metrics.totalTaskCount}',
                     ),
                     const SizedBox(height: 10),
                     _buildStatRow(
                       Icons.people_outline,
                       'Completed Members',
-                      '6 / 8',
-                      const Color(0xFF1B4332),
+                      '${metrics.completedMembersCount} / ${metrics.totalMembersCount}',
                     ),
                   ],
                 ),
@@ -296,7 +321,7 @@ class _CircleDashboardState extends State<CircleDashboard> {
     );
   }
 
-  Widget _buildStatRow(IconData icon, String label, String value, Color iconBg) {
+  Widget _buildStatRow(IconData icon, String label, String value) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -308,7 +333,10 @@ class _CircleDashboardState extends State<CircleDashboard> {
         children: [
           Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(6)),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1B4332),
+              borderRadius: BorderRadius.circular(6),
+            ),
             child: Icon(icon, color: const Color(0xFF22C55E), size: 16),
           ),
           const SizedBox(width: 10),
@@ -331,13 +359,19 @@ class _CircleDashboardState extends State<CircleDashboard> {
     );
   }
 
-  Widget _buildTodaysTasks() {
+  Widget _buildTodaysTasks(CircleDetailsModel circleDetails) {
+    final taskList = circleDetails.taskList;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           "Today's Tasks",
-          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 12),
         Container(
@@ -346,26 +380,46 @@ class _CircleDashboardState extends State<CircleDashboard> {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: const Color(0xFF1A3322), width: 1),
           ),
-          child: Column(
-            children: tasks.asMap().entries.map((entry) {
-              final i = entry.key;
-              final task = entry.value;
-              return Column(
-                children: [
-                  _buildTaskItem(task),
-                  if (i < tasks.length - 1)
-                    const Divider(color: Color(0xFF1A3322), height: 1, indent: 16, endIndent: 16),
-                ],
-              );
-            }).toList(),
-          ),
+          child: taskList.isEmpty
+              ? const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info, color: Colors.white54),
+                      SizedBox(width: 10),
+                      Text('No Task for today',
+                          style: TextStyle(color: Colors.white54)),
+                    ],
+                  ),
+                )
+              : Column(
+                  children: taskList.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final task = entry.value;
+                    return Column(
+                      children: [
+                        _buildTaskItem(task),
+                        if (i < taskList.length - 1)
+                          const Divider(
+                            color: Color(0xFF1A3322),
+                            height: 1,
+                            indent: 16,
+                            endIndent: 16,
+                          ),
+                      ],
+                    );
+                  }).toList(),
+                ),
         ),
       ],
     );
   }
 
-  Widget _buildTaskItem(_Task task) {
-    final progress = task.completed / task.total;
+  Widget _buildTaskItem(CircleTaskEntity task) {
+    final completed = task.completedTask ?? 0;
+    final total = task.totalTaskCount ?? 1;
+    final progress = (completed / total).clamp(0.0, 1.0);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       child: Row(
@@ -374,10 +428,10 @@ class _CircleDashboardState extends State<CircleDashboard> {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: task.iconBg,
+              color: const Color(0xFF1B4332),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(task.icon, color: Colors.white, size: 20),
+            child: const Icon(Icons.menu_book, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -385,7 +439,7 @@ class _CircleDashboardState extends State<CircleDashboard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  task.name,
+                  task.title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -398,7 +452,9 @@ class _CircleDashboardState extends State<CircleDashboard> {
                   child: LinearProgressIndicator(
                     value: progress,
                     backgroundColor: const Color(0xFF1A3322),
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF22C55E)),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      Color(0xFF22C55E),
+                    ),
                     minHeight: 4,
                   ),
                 ),
@@ -416,11 +472,15 @@ class _CircleDashboardState extends State<CircleDashboard> {
                   shape: BoxShape.circle,
                   border: Border.all(color: const Color(0xFF22C55E), width: 2),
                 ),
-                child: const Icon(Icons.check, color: Color(0xFF22C55E), size: 16),
+                child: const Icon(
+                  Icons.check,
+                  color: Color(0xFF22C55E),
+                  size: 16,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
-                '${task.completed}/${task.total}',
+                '$completed/$total',
                 style: const TextStyle(color: Color(0xFF6B7280), fontSize: 11),
               ),
             ],
@@ -430,7 +490,7 @@ class _CircleDashboardState extends State<CircleDashboard> {
     );
   }
 
-  Widget _buildMembersSection() {
+  Widget _buildMembersSection(CircleDetailsModel circleDetails) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -439,25 +499,30 @@ class _CircleDashboardState extends State<CircleDashboard> {
           children: [
             const Text(
               'Members',
-              style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: const Text(
-                'View all',
-                style: TextStyle(color: Color(0xFF22C55E), fontSize: 13),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
               ),
             ),
+            // GestureDetector(
+            //   onTap: () {},
+            //   child: const Text(
+            //     'View all',
+            //     style: TextStyle(color: Color(0xFF22C55E), fontSize: 13),
+            //   ),
+            // ),
           ],
         ),
         const SizedBox(height: 12),
-        ...members.map((m) => _buildMemberRow(m)),
+        if (circleDetails.membersList.isNotEmpty)
+          ...circleDetails.membersList.map((m) => _buildMemberRow(m,circleDetails.userId??'',circleDetails.taskList.isEmpty?false:true)),
       ],
     );
   }
 
-  Widget _buildMemberRow(_Member member) {
-    final isCompleted = member.status == 'Completed';
+  Widget _buildMemberRow(CircleMemberModel member,String userId,bool hasTasks) {
+    final isCompleted = member.completionStatus == 'Completed';
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -466,7 +531,7 @@ class _CircleDashboardState extends State<CircleDashboard> {
             radius: 22,
             backgroundColor: const Color(0xFF1B4332),
             child: Text(
-              member.name[0],
+              member.memberName.isNotEmpty ? member.memberName[0] : '?',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -477,32 +542,40 @@ class _CircleDashboardState extends State<CircleDashboard> {
           const SizedBox(width: 14),
           Expanded(
             child: Text(
-              member.name,
-              style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+              member.memberId == userId ? 'You': member.memberName.isNotEmpty ? member.memberName : 'Unknown',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          Container(
+          hasTasks ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
             decoration: BoxDecoration(
-              color: isCompleted ? const Color(0xFF14532D) : const Color(0xFF3B2A00),
+              color: isCompleted
+                  ? const Color(0xFF14532D)
+                  : const Color(0xFF3B2A00),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              member.status,
+              member.completionStatus.isNotEmpty ? member.completionStatus : 'No Status',
               style: TextStyle(
-                color: isCompleted ? const Color(0xFF22C55E) : const Color(0xFFF59E0B),
+                color: isCompleted
+                    ? const Color(0xFF22C55E)
+                    : const Color(0xFFF59E0B),
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ),
+          ):SizedBox(),
           const SizedBox(width: 10),
           Row(
             children: [
-              const Text('🔥', style: TextStyle(fontSize: 15)),
+              const Text('\u{1F525}', style: TextStyle(fontSize: 15)),
               const SizedBox(width: 2),
               Text(
-                '${member.streak}',
+                '${member.streakCount}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -517,129 +590,60 @@ class _CircleDashboardState extends State<CircleDashboard> {
   }
 
   Widget _buildBottomSection() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0x0007120A), Color(0xFF07120A)],
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      child: Row(
         children: [
-          // Action buttons
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.person_add_outlined, color: Color(0xFF22C55E), size: 18),
-                    label: const Text(
-                      'Invite Members',
-                      style: TextStyle(color: Color(0xFF22C55E), fontSize: 14),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFF22C55E), width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: const Color(0xFF0F1F13),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add, color: Colors.white, size: 18),
-                    label: const Text(
-                      'Add Task',
-                      style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF22C55E),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      elevation: 0,
-                    ),
-                  ),
-                ),
-              ],
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: () {},
+              icon: const Icon(Icons.person_add_outlined, color: Color(0xFF22C55E), size: 18),
+              label: const Text(
+                'Invite Members',
+                style: TextStyle(color: Color(0xFF22C55E), fontSize: 14),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Color(0xFF22C55E), width: 1.5),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: const Color(0xFF0F1F13),
+              ),
             ),
           ),
-          // Nav bar
-          // Container(
-          //   padding: const EdgeInsets.only(top: 8, bottom: 8),
-          //   decoration: const BoxDecoration(
-          //     color: Color(0xFF0D1A10),
-          //     border: Border(top: BorderSide(color: Color(0xFF1A3322), width: 1)),
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       _buildNavItem(0, Icons.home_outlined, Icons.home_rounded, 'Home'),
-          //       _buildNavItem(1, Icons.people_outlined, Icons.people_rounded, 'Circles'),
-          //       _buildNavItem(2, Icons.checklist_outlined, Icons.checklist_rounded, 'Tasks'),
-          //       _buildNavItem(3, Icons.auto_stories_outlined, Icons.auto_stories_rounded, 'Reflections'),
-          //       _buildNavItem(4, Icons.person_outline_rounded, Icons.person_rounded, 'Profile'),
-          //     ],
-          //   ),
-          // ),
-          // const SizedBox(height: 4),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
-    final isActive = _selectedNavIndex == index;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedNavIndex = index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isActive ? activeIcon : icon,
-            color: isActive ? const Color(0xFF22C55E) : const Color(0xFF4B5563),
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isActive ? const Color(0xFF22C55E) : const Color(0xFF4B5563),
-              fontSize: 10,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+          const SizedBox(width: 12),
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: (){
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const AddTaskSheet(),
+                  );
+              },
+              icon: const Icon(Icons.add, color: Colors.white, size: 18),
+              label: const Text(
+                'Add Task',
+                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF22C55E),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                elevation: 0,
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-// ─── Data Models ───────────────────────────────────────────────────────────────
 
-class _Member {
-  final String name;
-  final String status;
-  final int streak;
-  final bool completed;
-  const _Member(this.name, this.status, this.streak, this.completed);
-}
-
-class _Task {
-  final String name;
-  final int completed;
-  final int total;
-  final IconData icon;
-  final Color iconBg;
-  const _Task(this.name, this.completed, this.total, this.icon, this.iconBg);
 }
 
 // ─── Custom Painter ────────────────────────────────────────────────────────────
+
 
 class _CircleProgressPainter extends CustomPainter {
   final double progress;

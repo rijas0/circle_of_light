@@ -5,12 +5,16 @@ class CircleMemberModel extends CircleMemberEntity {
     required super.memberName,
     required super.streakCount,
     required super.completionStatus,
+    required super.memberId,
+    required super.avatarUrl,
   });
   factory CircleMemberModel.fromJSON(Map<String, dynamic> json) {
     return CircleMemberModel(
-      memberName: json['circleMemberName'],
-      streakCount: json['circleMemberStreak'],
-      completionStatus: json['circleMemberCompletionStatus'],
+      memberName: json['full_name'] ?? '',
+      streakCount: json['streak'] ?? 0,
+      completionStatus: json['status'] ?? '',
+      memberId: json['id'] ?? '',
+      avatarUrl: json['avatar_url'] ?? '',
     );
   }
 
@@ -19,6 +23,8 @@ class CircleMemberModel extends CircleMemberEntity {
       'circleMemberName': memberName,
       'circleMemberStreak': streakCount,
       'circleMemberCompletionStatus': completionStatus,
+      'memberId':memberId,
+      'avatarUrl':avatarUrl,
     };
   }
 }

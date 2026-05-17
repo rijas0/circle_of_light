@@ -91,139 +91,141 @@ class CreateCircleSheetState extends ConsumerState<CreateCircleSheet> {
   @override
   Widget build(BuildContext context) {
     final cstate = ref.read(circleNotifierProvider);
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF0F1923),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Title
-              const Text(
-                'Create a Circle',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Set up your Quran study circle',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.4),
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Circle Name
-              _label('Circle Name'),
-              const SizedBox(height: 8),
-              _textField(
-                _nameController,
-                'e.g. Surah Al-Kahf Friday Circle',
-                Icons.circle_outlined,
-                14,
-              ),
-              const SizedBox(height: 20),
-
-              _label('Circle Description'),
-              const SizedBox(height: 8),
-              _textField(
-                _descriptionController,
-                'e.g. Surah Al-Kahf Friday Circle',
-                Icons.info,
-                24,
-              ),
-              const SizedBox(height: 20),
-
-              // Focus
-              _label('Focus / Purpose'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _focuses
-                    .map(
-                      (f) => _chip(
-                        f,
-                        _focus == f,
-                        () => setState(() => _focus = f),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 20),
-
-              // Level
-              // _label('Level'),
-              // const SizedBox(height: 8),
-              // Wrap(
-              //   spacing: 8,
-              //   children: _levels.map((l) => _chip(l, _level == l, () => setState(() => _level = l))).toList(),
-              // ),
-              // const SizedBox(height: 20),
-
-              // Privacy
-              _label('Privacy'),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  _privacyOption('Public', Icons.public_rounded),
-                  const SizedBox(width: 10),
-                  _privacyOption('Private', Icons.lock_outline_rounded),
-                ],
-              ),
-              const SizedBox(height: 28),
-
-              // Button
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: () => handleCreateCircle(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2ECC71),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF0F1923),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    elevation: 0,
                   ),
-                  child: cstate.isLoading
-                      ? CircularProgressIndicator()
-                      : Text(
-                          'Create Circle',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+      
+                // Title
+                const Text(
+                  'Create a Circle',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Set up your Quran study circle',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.4),
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 20),
+      
+                // Circle Name
+                _label('Circle Name'),
+                const SizedBox(height: 8),
+                _textField(
+                  _nameController,
+                  'e.g. Surah Al-Kahf Friday Circle',
+                  Icons.circle_outlined,
+                  14,
+                ),
+                const SizedBox(height: 20),
+      
+                _label('Circle Description'),
+                const SizedBox(height: 8),
+                _textField(
+                  _descriptionController,
+                  'e.g. Surah Al-Kahf Friday Circle',
+                  Icons.info,
+                  24,
+                ),
+                const SizedBox(height: 20),
+      
+                // Focus
+                _label('Focus / Purpose'),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _focuses
+                      .map(
+                        (f) => _chip(
+                          f,
+                          _focus == f,
+                          () => setState(() => _focus = f),
+                        ),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 20),
+      
+                // Level
+                // _label('Level'),
+                // const SizedBox(height: 8),
+                // Wrap(
+                //   spacing: 8,
+                //   children: _levels.map((l) => _chip(l, _level == l, () => setState(() => _level = l))).toList(),
+                // ),
+                // const SizedBox(height: 20),
+      
+                // Privacy
+                _label('Privacy'),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    _privacyOption('Public', Icons.public_rounded),
+                    const SizedBox(width: 10),
+                    _privacyOption('Private', Icons.lock_outline_rounded),
+                  ],
+                ),
+                const SizedBox(height: 28),
+      
+                // Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: () => handleCreateCircle(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2ECC71),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: cstate.isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            'Create Circle',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

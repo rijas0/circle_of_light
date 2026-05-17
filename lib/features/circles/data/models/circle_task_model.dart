@@ -1,15 +1,19 @@
 import 'package:circle_of_light/features/circles/domain/entities/circle_task_entity.dart';
 
 class CircleTaskModel extends CircleTaskEntity {
-  CircleTaskModel({required super.title, super.dateTime, super.completed});
+  CircleTaskModel({
+    required super.title,
+    super.dateTime,
+    super.completed,
+    super.completedTask,
+    super.totalTaskCount,
+  });
 
   factory CircleTaskModel.fromJSON(Map<String, dynamic> json) {
     return CircleTaskModel(
-      title: json['circleTaskTitle'],
-      completed: json['circleTaskStatus'] ?? false,
-      dateTime: json['circleTaskDate'] != null 
-        ? DateTime.parse(json['circleTaskDate']) 
-        : DateTime.now(),
+      title: json['name'] ?? '',
+      completedTask: json['completed_count'] ?? 0,
+      totalTaskCount: json['total_count'] ?? 0,
     );
   }
 

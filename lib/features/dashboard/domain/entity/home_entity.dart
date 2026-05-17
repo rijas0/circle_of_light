@@ -1,4 +1,4 @@
-import "../../../circles/data/models/circle_model.dart";
+import "package:circle_of_light/features/circles/data/models/circle_list_model.dart";
 
 
 class HomeEntity {
@@ -14,7 +14,7 @@ class HomeEntity {
   final String reflectionTW;
   final String totalCheckInTw;
   final String consistencyTW;
-  final List<CircleModel> circleList;
+  final List<CircleListModel> circleList;
 
   HomeEntity({
     required this.userName,

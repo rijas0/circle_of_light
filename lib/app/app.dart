@@ -1,4 +1,5 @@
 import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
+import 'package:circle_of_light/features/get_started/presentation/provider/provider.dart';
 import 'package:circle_of_light/router/router.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,16 @@ class _CircleOfLightAppState extends ConsumerState<CircleOfLightApp> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
     final router = ref.watch(goRouterProvider);
+
+    ref.listen(authNotifierProvider, (prev, next) {
+      final wasInitializing = prev?.isInitializing ?? true;
+      final isNowReady = !next.isInitializing;
+      final justLoggedIn = prev?.user == null && next.user != null;
+
+      if ((wasInitializing && isNowReady && next.user != null) || justLoggedIn) {
+        ref.read(userCircleCheckNotifierProvider.notifier).checkUserHasCircle();
+      }
+    });
 
     return MaterialApp.router(
       title: AppStrings.appName,

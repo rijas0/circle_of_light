@@ -1,15 +1,26 @@
+import 'dart:ui';
+
 import 'package:circle_of_light/features/auth/presentation/providers/provider.dart';
+import 'package:circle_of_light/features/get_started/presentation/provider/provider.dart';
+import 'package:circle_of_light/features/get_started/presentation/widget/buildCreateIcon.dart';
+import 'package:circle_of_light/features/get_started/presentation/widget/create_join_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 
-class GetStartedScreen extends ConsumerWidget {
+class GetStartedScreen extends ConsumerStatefulWidget {
   const GetStartedScreen({super.key});
-  
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
+}
+
+
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final vm = ref.read(userCircleCheckNotifierProvider);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -20,7 +31,11 @@ class GetStartedScreen extends ConsumerWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  icon: const Icon(Icons.logout_rounded, color: Colors.white38, size: 22),
+                  icon: const Icon(
+                    Icons.logout_rounded,
+                    color: Colors.white38,
+                    size: 22,
+                  ),
                   onPressed: () async {
                     await ref.read(authNotifierProvider.notifier).logout();
                     if (context.mounted) context.go('/login');
@@ -79,49 +94,94 @@ class GetStartedScreen extends ConsumerWidget {
 
               // Page indicator dots
               // _buildPageIndicator(),
-
               const Spacer(flex: 2),
 
+              vm.isLoading
+                  ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0D2018),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color:  const Color(0xFF2ECC71).withOpacity(0.25), width: 1.2),
+                ),
+                child: Row(
+                  children: [
+                    CircularProgressIndicator(color:const Color(0xFF2ECC71).withOpacity(0.7),strokeWidth: 2,padding: EdgeInsets.all(4),),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Finding your circle',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Please wait. Do not close the app',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.45),
+                              fontSize: 13,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+              )
+                  : SizedBox(),
+              vm.userCircleStatus?.isNewUser??false
+                  ? CreateJoinButton(
+                      callback: () => context.push('/create-join-room'),
+                    )
+                  : SizedBox(),
+
               // Get started section
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Get started',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Create a new circle or join an existing one.',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.45),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Create a Circle card
-              _buildActionCard(
-                iconWidget: _buildCreateIcon(),
-                title: 'Create or Join Circle',
-                subtitle: 'Start a new  or join an existing circle and\ninvite your friends.',
-                arrowColor: const Color(0xFF2ECC71),
-                borderColor: const Color(0xFF2ECC71).withOpacity(0.25),
-                backgroundColor: const Color(0xFF0D2018),
-                onTap: () => context.push('/create-join-room'),
-              ),
-
+              // const Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Get started',
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontSize: 26,
+              //       fontWeight: FontWeight.w700,
+              //       letterSpacing: -0.3,
+              //     ),
+              //   ),
+              // ),
+              //
+              // const SizedBox(height: 6),
+              //
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Create a new circle or join an existing one.',
+              //     style: TextStyle(
+              //       color: Colors.white.withOpacity(0.45),
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
+              //
+              // const SizedBox(height: 20),
+              //
+              // // Create a Circle card
+              // _buildActionCard(
+              //   iconWidget: _buildCreateIcon(),
+              //   title: 'Create or Join Circle',
+              //   subtitle: 'Start a new  or join an existing circle and\ninvite your friends.',
+              //   arrowColor: const Color(0xFF2ECC71),
+              //   borderColor: const Color(0xFF2ECC71).withOpacity(0.25),
+              //   backgroundColor: const Color(0xFF0D2018),
+              //   onTap: () => context.push('/create-join-room'),
+              // ),
               const SizedBox(height: 14),
 
               // Join a Circle card
@@ -134,7 +194,6 @@ class GetStartedScreen extends ConsumerWidget {
               //   backgroundColor: const Color(0xFF0D1525),
               //   onTap: () {},
               // ),
-
               const Spacer(flex: 1),
 
               // Privacy note
@@ -183,9 +242,7 @@ class GetStartedScreen extends ConsumerWidget {
     return SizedBox(
       width: 110,
       height: 110,
-      child: CustomPaint(
-        painter: LogoPainter(),
-      ),
+      child: CustomPaint(painter: LogoPainter()),
     );
   }
 
@@ -218,79 +275,79 @@ class GetStartedScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionCard({
-    required Widget iconWidget,
-    required String title,
-    required String subtitle,
-    required Color arrowColor,
-    required Color borderColor,
-    required Color backgroundColor,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: borderColor, width: 1.2),
-        ),
-        child: Row(
-          children: [
-            iconWidget,
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.45),
-                      fontSize: 13,
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: arrowColor,
-              size: 24,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget buildActionCard({
+  //   required Widget iconWidget,
+  //   required String title,
+  //   required String subtitle,
+  //   required Color arrowColor,
+  //   required Color borderColor,
+  //   required Color backgroundColor,
+  //   required VoidCallback onTap,
+  // }) {
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+  //       decoration: BoxDecoration(
+  //         color: backgroundColor,
+  //         borderRadius: BorderRadius.circular(18),
+  //         border: Border.all(color: borderColor, width: 1.2),
+  //       ),
+  //       child: Row(
+  //         children: [
+  //           iconWidget,
+  //           const SizedBox(width: 16),
+  //           Expanded(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   title,
+  //                   style: const TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 17,
+  //                     fontWeight: FontWeight.w700,
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 5),
+  //                 Text(
+  //                   subtitle,
+  //                   style: TextStyle(
+  //                     color: Colors.white.withOpacity(0.45),
+  //                     fontSize: 13,
+  //                     height: 1.5,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           const SizedBox(width: 8),
+  //           Icon(
+  //             Icons.chevron_right_rounded,
+  //             color: arrowColor,
+  //             size: 24,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildCreateIcon() {
-    return Container(
-      width: 62,
-      height: 62,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A3A2A),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: const Icon(
-        Icons.group_add_outlined,
-        color: Color(0xFF2ECC71),
-        size: 30,
-      ),
-    );
-  }
+  // Widget buildCreateIcon() {
+  //   return Container(
+  //     width: 62,
+  //     height: 62,
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFF1A3A2A),
+  //       borderRadius: BorderRadius.circular(14),
+  //     ),
+  //     child: const Icon(
+  //       Icons.group_add_outlined,
+  //       color: Color(0xFF2ECC71),
+  //       size: 30,
+  //     ),
+  //   );
+  // }
 
   Widget _buildJoinIcon() {
     return Container(
@@ -348,10 +405,19 @@ class LogoPainter extends CustomPainter {
     final cutPaint = Paint()
       ..color = const Color(0xFF0A0F14)
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(moonCenter.dx + 5, moonCenter.dy - 3), 7, cutPaint);
+    canvas.drawCircle(
+      Offset(moonCenter.dx + 5, moonCenter.dy - 3),
+      7,
+      cutPaint,
+    );
 
     // Star next to moon
-    _drawStar(canvas, Offset(size.width * 0.74, size.height * 0.16), 3, greenFill);
+    _drawStar(
+      canvas,
+      Offset(size.width * 0.74, size.height * 0.16),
+      3,
+      greenFill,
+    );
 
     // Mosque dome
     final domeCenter = Offset(center.dx, size.height * 0.55);
@@ -373,9 +439,10 @@ class LogoPainter extends CustomPainter {
     // Minaret/spire on top
     final spireRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
-          center: Offset(center.dx, domeCenter.dy - domeRadius - 10),
-          width: 10,
-          height: 20),
+        center: Offset(center.dx, domeCenter.dy - domeRadius - 10),
+        width: 10,
+        height: 20,
+      ),
       const Radius.circular(5),
     );
     canvas.drawRRect(spireRect, greenFill);

@@ -1,5 +1,6 @@
-import 'package:circle_of_light/features/circles/data/models/circle_model.dart';
 import 'package:circle_of_light/features/dashboard/domain/entity/home_entity.dart';
+
+import '../../../circles/data/models/circle_list_model.dart';
 
 class HomeModel extends HomeEntity {
   HomeModel({
@@ -36,7 +37,7 @@ class HomeModel extends HomeEntity {
           (json['circleList'] as List<dynamic>?)
               ?.map(
                 (task) =>
-                    CircleModel.fromJSON(task as Map<String, dynamic>),
+                    CircleListModel.fromJSON(task as Map<String, dynamic>),
               )
               .toList() ??
           [], // this should be return list of daily task in a circle
