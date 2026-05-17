@@ -10,7 +10,7 @@ class CircleEntity {
     required this.isPublic,
     required this.creatorId,
     required this.focus,
-    required this.circleProgress,
+    required this.circleMetrics,
     required this.membersList,
     required this.taskList,
     required this.completedMembers,
@@ -31,5 +31,5 @@ class CircleEntity {
   final String completedMembers;
   final List<CircleMemberModel> membersList;
   final List<CircleTaskModel> taskList;
-  final CircleProgressModel circleProgress;
+  final CircleProgressModel circleMetrics;
 }

@@ -1,9 +1,12 @@
+import 'package:circle_of_light/features/circles/data/models/circle_list_model.dart';
+import 'package:circle_of_light/features/create_circle/presentation/page/create_circle_sheet.dart';
+import 'package:circle_of_light/features/create_circle/presentation/page/join_circle_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../provider/provider.dart';
 import '../widgets/circle_card.dart';
-import '../../data/models/circle_model.dart';
 import '../../../../shared/widgets/section_title.dart';
 
 class CirclesScreen extends ConsumerStatefulWidget {
@@ -18,102 +21,123 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(circleListProvider.notifier).getCircleDetails(),
+      (_) => ref.read(circleListNotifierProvider.notifier).getCircleDetails(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(circleListProvider);
+    final state = ref.watch(circleListNotifierProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionTitle(
-            title: 'Your Circles',
-            subtitle: 'Small private groups where consistency becomes visible.',
-          ),
-          const SizedBox(height: 20),
-
-          Row(
-            children: [
-              Expanded(
-                child: _ActionButton(
-                  icon: Icons.add_rounded,
-                  label: 'Create Circle',
-                  color: const Color(0xFF2ECC71),
-                  bgColor: const Color(0xFF1A3A2A),
-                  borderColor: const Color(0xFF2ECC71),
-                  onTap: () {},
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _ActionButton(
-                  icon: Icons.login_rounded,
-                  label: 'Join Circle',
-                  color: const Color(0xFF3B82F6),
-                  bgColor: const Color(0xFF0D1525),
-                  borderColor: const Color(0xFF3B82F6),
-                  onTap: () {},
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          if (state.isLoading && state.circles.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 48),
-              child: Center(child: CircularProgressIndicator()),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SectionTitle(
+              title: 'Your Circles',
+              subtitle:
+                  'Small private groups where consistency becomes visible.',
             ),
-
-          if (state.error != null && state.circles.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 48),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      state.error!,
-                      style: TextStyle(color: Colors.red[400], fontSize: 14),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton.icon(
-                      onPressed: () => ref.read(circleListProvider.notifier).getCircleDetails(),
-                      icon: const Icon(Icons.refresh, size: 16),
-                      label: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-          if (state.circles.isNotEmpty) ...[
-            _SummaryStrip(circles: state.circles),
             const SizedBox(height: 20),
-          ],
 
-          if (!state.isLoading && state.circles.isEmpty && state.error == null)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 48),
-              child: Center(
-                child: Text(
-                  'No circles yet. Create or join one to get started!',
-                  style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 14),
-                  textAlign: TextAlign.center,
+            Row(
+              children: [
+                Expanded(
+                  child: _ActionButton(
+                    icon: Icons.add_rounded,
+                    label: 'Create Circle',
+                    color: const Color(0xFF2ECC71),
+                    bgColor: const Color(0xFF1A3A2A),
+                    borderColor: const Color(0xFF2ECC71),
+                    onTap: () => showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (ctx) => CreateCircleSheet(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _ActionButton(
+                    icon: Icons.login_rounded,
+                    label: 'Join Circle',
+                    color: const Color(0xFF3B82F6),
+                    bgColor: const Color(0xFF0D1525),
+                    borderColor: const Color(0xFF3B82F6),
+                    onTap: () => showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (ctx) => JoinCircleSheet(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            if (state.isLoading && state.circles.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 48),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+
+            if (state.error != null && state.circles.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        state.error!,
+                        style: TextStyle(color: Colors.red[400], fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      TextButton.icon(
+                        onPressed: () => ref
+                            .read(circleListNotifierProvider.notifier)
+                            .getCircleDetails(),
+                        icon: const Icon(Icons.refresh, size: 16),
+                        label: const Text('Retry'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-          for (final circle in state.circles) ...[
-            CircleCard(circle: circle),
-            const SizedBox(height: 12),
+            if (state.circles.isNotEmpty) ...[
+              _SummaryStrip(circles: state.circles),
+              const SizedBox(height: 20),
+            ],
+
+            if (!state.isLoading &&
+                state.circles.isEmpty &&
+                state.error == null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48),
+                child: Center(
+                  child: Text(
+                    'No circles yet. Create or join one to get started!',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.4),
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+
+            for (final circle in state.circles) ...[
+              CircleCard(
+                circle: circle,
+                onTap: () => context.push('/circle-details',extra: circle.circleId),
+              ),
+              const SizedBox(height: 12),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -168,14 +192,20 @@ class _ActionButton extends StatelessWidget {
 }
 
 class _SummaryStrip extends StatelessWidget {
-  final List<CircleModel> circles;
+  final List<CircleListModel> circles;
 
   const _SummaryStrip({required this.circles});
 
   @override
   Widget build(BuildContext context) {
-    final totalTasks = circles.fold<int>(0, (sum, c) => sum + (c.taskList?.length ?? 0));
-    final totalMembers = circles.fold<int>(0, (sum, c) => sum + (c.memberCount ?? 0));
+    // final totalTasks = circles.fold<double>(
+    //   0,
+    //   (sum, c) => sum + (c.taskList?.length ?? 0),
+    // );
+    final totalMembers = circles.fold<int>(
+      0,
+      (sum, c) => sum + (c.memberCount ?? 0),
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -186,9 +216,13 @@ class _SummaryStrip extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _strip(circles.length.toString(), 'Active Circles', const Color(0xFF2ECC71)),
+          _strip(
+            circles.length.toString(),
+            'Active Circles',
+            const Color(0xFF2ECC71),
+          ),
           _divider(),
-          _strip(totalTasks.toString(), 'Tasks Total', const Color(0xFFF39C12)),
+          //_strip(totalTasks.toString(), 'Tasks Total', const Color(0xFFF39C12)),
           _divider(),
           _strip(totalMembers.toString(), 'Members', const Color(0xFF9B59B6)),
         ],
@@ -200,21 +234,28 @@ class _SummaryStrip extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Text(val,
-              style: TextStyle(
-                  color: color, fontSize: 20, fontWeight: FontWeight.w800)),
+          Text(
+            val,
+            style: TextStyle(
+              color: color,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.38), fontSize: 10)),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.38),
+              fontSize: 10,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _divider() => Container(
-        width: 1, height: 32,
-        color: Colors.white.withOpacity(0.07),
-      );
+  Widget _divider() =>
+      Container(width: 1, height: 32, color: Colors.white.withOpacity(0.07));
 }

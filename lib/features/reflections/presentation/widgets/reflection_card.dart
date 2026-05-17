@@ -12,6 +12,7 @@ class ReflectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      onTap: (){},
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

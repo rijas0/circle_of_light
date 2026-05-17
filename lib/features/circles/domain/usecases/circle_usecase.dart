@@ -1,12 +1,12 @@
-import 'package:circle_of_light/features/circles/data/models/circle_model.dart';
-import 'package:circle_of_light/features/circles/domain/repository/circle_repository.dart';
+import '../../data/models/circle_list_model.dart';
+import '../repository/circle_repository.dart';
 
 class CircleUseCase {
   final CircleRepository repository;
 
   CircleUseCase(this.repository);
 
-  Future<List<CircleModel>> call() {
+  Future<List<CircleListModel>> call() {
     return repository.getCircleDetails();
   }
 }

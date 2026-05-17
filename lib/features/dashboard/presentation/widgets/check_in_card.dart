@@ -20,6 +20,7 @@ class CheckInCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      onTap: (){},
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
